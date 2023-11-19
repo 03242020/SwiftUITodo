@@ -94,7 +94,7 @@ struct HelloPage: View {
                 } label: {
                     HStack{
                         Image(systemName: "arrowshape.right.fill")
-                        Text("NextPage")
+                        Text("AddViewへ")
                     }
                 }
                 .fullScreenCover(isPresented: $addActive, content: {
