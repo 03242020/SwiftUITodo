@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "8DDD4318-96A8-4FDC-8EC5-270E6BEA8251"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A0631BE2-FE1C-4589-BBFB-817129767E71"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftUITodo/HelloPage.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "getTodoDataForFirestore()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4AC12058-AF62-48C2-90B5-E0BC818168A5"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "SwiftUITodo/HelloPage.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "92"
+            endingLineNumber = "92"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "4AC12058-AF62-48C2-90B5-E0BC818168A5 - f72c82010a4adb84"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Text&gt;, SwiftUI.Button&lt;SwiftUI.HStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Image, SwiftUI.Text)&gt;&gt;&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Text, SwiftUI.NavigationView&lt;SwiftUI.List&lt;Swift.Never, SwiftUI.ForEach&lt;Swift.Array&lt;SwiftUITodo.TodoInfo&gt;, Swift.Optional&lt;Swift.String&gt;, SwiftUI.NavigationLink&lt;SwiftUI.Text, SwiftUITodo.EditView&gt;&gt;&gt;&gt;, SwiftUI.Spacer, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Text&gt;, SwiftUI.Button&lt;SwiftUI.HStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Image, SwiftUI.Text)&gt;&gt;&gt;)&gt;&gt;)&gt; in SwiftUITodo.HelloPage.body.getter : some"
+                  moduleName = "SwiftUITodo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ryo.inomata/Documents/SwiftUITodo/SwiftUITodo/SwiftUITodo/HelloPage.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "92"
+                  endingLineNumber = "92"
+                  offsetFromSymbolStart = "409">
+               </Location>
+               <Location
+                  uuid = "4AC12058-AF62-48C2-90B5-E0BC818168A5 - 4354267d35099a29"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 () -&gt; () in closure #2 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Text&gt;, SwiftUI.Button&lt;SwiftUI.HStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Image, SwiftUI.Text)&gt;&gt;&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Text, SwiftUI.NavigationView&lt;SwiftUI.List&lt;Swift.Never, SwiftUI.ForEach&lt;Swift.Array&lt;SwiftUITodo.TodoInfo&gt;, Swift.Optional&lt;Swift.String&gt;, SwiftUI.NavigationLink&lt;SwiftUI.Text, SwiftUITodo.EditView&gt;&gt;&gt;&gt;, SwiftUI.Spacer, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Text&gt;, SwiftUI.Button&lt;SwiftUI.HStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Image, SwiftUI.Text)&gt;&gt;&gt;)&gt;&gt;)&gt; in SwiftUITodo.HelloPage.body.getter : some"
+                  moduleName = "SwiftUITodo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ryo.inomata/Documents/SwiftUITodo/SwiftUITodo/SwiftUITodo/HelloPage.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "154">
+               </Location>
+               <Location
+                  uuid = "4AC12058-AF62-48C2-90B5-E0BC818168A5 - ae42d6f41a5a86da"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Text&gt;, SwiftUI.Button&lt;SwiftUI.HStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Image, SwiftUI.Text)&gt;&gt;&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Text, SwiftUI.NavigationView&lt;SwiftUI.List&lt;Swift.Never, SwiftUI.ForEach&lt;Swift.Array&lt;SwiftUITodo.TodoInfo&gt;, Swift.Optional&lt;Swift.String&gt;, SwiftUI.NavigationLink&lt;SwiftUI.Text, SwiftUITodo.EditView&gt;&gt;&gt;&gt;, SwiftUI.Spacer, &lt;&lt;opaque return type of SwiftUI.View.navigationDestination&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.View&gt;(isPresented: SwiftUI.Binding&lt;Swift.Bool&gt;, destination: () -&gt; &#x3c4;_1_0) -&gt; some&gt;&gt;.0)&gt; in SwiftUITodo.HelloPage.body.getter : some"
+                  moduleName = "SwiftUITodo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ryo.inomata/Documents/SwiftUITodo/SwiftUITodo/SwiftUITodo/HelloPage.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "92"
+                  endingLineNumber = "92"
+                  offsetFromSymbolStart = "409">
+               </Location>
+               <Location
+                  uuid = "4AC12058-AF62-48C2-90B5-E0BC818168A5 - 95465213d2e6a633"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 () -&gt; () in closure #2 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Button&lt;SwiftUI.Text&gt;, SwiftUI.Button&lt;SwiftUI.HStack&lt;SwiftUI.TupleView&lt;(SwiftUI.Image, SwiftUI.Text)&gt;&gt;&gt;)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(SwiftUI.Text, SwiftUI.NavigationView&lt;SwiftUI.List&lt;Swift.Never, SwiftUI.ForEach&lt;Swift.Array&lt;SwiftUITodo.TodoInfo&gt;, Swift.Optional&lt;Swift.String&gt;, SwiftUI.NavigationLink&lt;SwiftUI.Text, SwiftUITodo.EditView&gt;&gt;&gt;&gt;, SwiftUI.Spacer, &lt;&lt;opaque return type of SwiftUI.View.navigationDestination&lt;&#x3c4;_0_0 where &#x3c4;_1_0: SwiftUI.View&gt;(isPresented: SwiftUI.Binding&lt;Swift.Bool&gt;, destination: () -&gt; &#x3c4;_1_0) -&gt; some&gt;&gt;.0)&gt; in SwiftUITodo.HelloPage.body.getter : some"
+                  moduleName = "SwiftUITodo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ryo.inomata/Documents/SwiftUITodo/SwiftUITodo/SwiftUITodo/HelloPage.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "93"
+                  endingLineNumber = "93"
+                  offsetFromSymbolStart = "154">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
