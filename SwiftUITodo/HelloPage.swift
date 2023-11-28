@@ -18,6 +18,8 @@ struct HelloPage: View {
         case either     = 3
         case toBuy      = 4
     }
+    @State var showSecondView = false
+    @ObservedObject var userName = ViewModel()
     var viewType = CategoryType.normal.rawValue
     var isDone: Bool? = false
     func getTodoDataForFirestore() {
@@ -70,37 +72,70 @@ struct HelloPage: View {
     @State var showHogeText = false
     @State var getTodoArray: [TodoInfo] = [TodoInfo]()
     @State private var showSheet: Bool = false
-    @State private var addActive: Bool = false
+    @State var addActive: Bool = false
+    @State var path = NavigationPath()
     var body: some View {
         VStack{
-            Text("Table編").font(.title)
-            NavigationView {
+            Text("")
+                .onAppear {
+                    getTodoDataForFirestore()
+                }
+            NavigationStack {
                 List(getTodoArray) { getTodoArray in
-                    NavigationLink(destination: EditView(title: getTodoArray.todoTitle ?? "値渡し失敗", scheduleDate: getTodoArray.todoScheduleDate ?? "値渡し失敗", scheduleTime: getTodoArray.todoScheduleTime ?? "値渡し失敗", id: getTodoArray.id!, todoInfo: getTodoArray)){
+                    NavigationLink(destination: EditView(title: getTodoArray.todoTitle ?? "値渡し失敗", scheduleDate: getTodoArray.todoScheduleDate ?? "値渡し失敗", scheduleTime: getTodoArray.todoScheduleTime ?? "値渡し失敗", createdTime: getTodoArray.todoCreated ?? "", updatedTime: getTodoArray.todoUpdated ?? "", id: getTodoArray.id!, todoInfo: getTodoArray)){
                         Text(getTodoArray.todoTitle!)
                     }
+                    .navigationBarTitle("NavBar")
                 }
-            }
-            Spacer(minLength: 0)
-            //            }
-            VStack{
-                Button(action: {
-                    getTodoDataForFirestore()
-                }) {
-                    Text("list表示")
-                }
-                Button {
-                    addActive.toggle()
-                } label: {
-                    HStack{
-                        Image(systemName: "arrowshape.right.fill")
-                        Text("AddViewへ")
+                NavigationStack {
+                    Button(action: {
+                        addActive.toggle()
+                    }, label: {
+                        Image(systemName: "rectangle.stack.badge.plus")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24.0, height: 24.0)
+                            .foregroundColor(.white)
+                            .padding(.all, 12.0)
+                            .background(Color.red)
+                            .cornerRadius(24.0)
+                            .shadow(color: .black.opacity(0.3),
+                                    radius: 5.0,
+                                    x: 1.0, y: 1.0)
+                    })
+                    .navigationDestination(isPresented: $addActive) {
+                        AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "",isPresent: self.$showSecondView, userName: self.userName)
                     }
                 }
-                .fullScreenCover(isPresented: $addActive, content: {
-                    AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "")
-                        })
+                    .offset(x: -16.0, y: -16.0)
             }
         }
+        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
+//        .navigationViewStyle(StackNavigationViewStyle()) // この行を追加
+
+
+//            Spacer(minLength: 0)
+            //            }
+//            NavigationStack {
+//                Button {
+//                    addActive.toggle()
+//                } label: {
+//                    HStack{
+//                        Image(systemName: "arrowshape.right.fill")
+//                        Text("AddViewへ")
+//                    }
+//                }
+////                .buttonStyle(.bordered)
+//                .navigationDestination(isPresented: $addActive, destination: {AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "")
+//                })
+//            }
+        }
+
+//        ZStack{
+
+            //                .fullScreenCover(isPresented: $addActive, content: {
+            //                    AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "")
+            //                        })
+//        }
     }
-}
+

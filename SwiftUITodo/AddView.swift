@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 struct AddView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.timeZone) private var timeZone
     @State var title: String
     @State var scheduleDate: String
     @State var scheduleTime: String
@@ -20,33 +21,47 @@ struct AddView: View {
     @State var editingText: String
     @State var showPicker = false
     @State var selectDate = Date()
+    @State var selectTime = Date()
+    @Binding var isPresent: Bool
+        // FirstViewから呼び出す際にFirstViewで初期化したViewModel変数を指定
+    @ObservedObject var userName: ViewModel
+    var dateFormat: DateFormatter {
+        let dformat = DateFormatter()
+        dformat.dateStyle = .medium
+        dformat.timeStyle = .medium
+        dformat.dateFormat = "yyyy/MM/dd"
+        dformat.timeZone  = timeZone
+        return dformat
+    }
+    var timeFormat: DateFormatter {
+        let tformat = DateFormatter()
+        tformat.dateStyle = .medium
+        tformat.timeStyle = .medium
+        tformat.dateFormat = "HH:mm"
+        tformat.timeZone  = timeZone
+        return tformat
+    }
+    
     var body: some View {
         VStack {
             //$email
             TextField("資料作成", text: $title)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-            TextField("yearTextField", text: $scheduleDate)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            TextField("scheduleDate", text: $scheduleTime)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            HStack {
+                DatePicker("", selection: $selectDate, displayedComponents: .date).labelsHidden()
+                Spacer()
+                DatePicker("", selection: $selectTime, displayedComponents: .hourAndMinute).labelsHidden()
+            }
             Text("詳細")
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField("Detail", text: $detail)
+            TextField("detail", text: $detail)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()
-            DatePicker("", selection: $selectDate, displayedComponents: [.hourAndMinute, .date]).labelsHidden()
-            
-            DatePicker("", selection: $selectDate, displayedComponents: .hourAndMinute).labelsHidden()
-            
-            DatePicker("", selection: $selectDate, displayedComponents: .date).labelsHidden()
-//        }.padding()
-//            TextField("Your Text",
-//                text: $editingText,
-//                onEditingChanged: { editing in
-//                    self.showPicker = editing
-//                }
-//            )
-            .padding()
+                Spacer()
+
+//            Text("Original: \(selectDate.description)")
+//            Text("DateFormat: \(selectDate, formatter: dateFormat)")
+//            Text("TimeFormat: \(selectTime, formatter: timeFormat)")
             if self.showPicker {
                 DatePicker(selection: $selectDate,displayedComponents: .date, label: {})
             }
@@ -62,8 +77,8 @@ struct AddView: View {
                              "isDone": false,
                              "createdAt": createdTime,
                              "updatedAt": createdTime,
-                             "scheduleDate": self.date,
-                             "scheduleTime": self.time,
+                             "scheduleDate": dateFormat.string(from: selectDate),
+                             "scheduleTime": timeFormat.string(from: selectTime),
                              "viewType": 0
                             ],merge: true
                             ,completion: { error in
@@ -75,21 +90,13 @@ struct AddView: View {
 //                                    self.present(dialog, animated: true, completion: nil)
                                 } else {
                                     print("TODO作成成功")
-                                    // ④Todo一覧画面に戻る
-//                                    let storyboard: UIStoryboard = self.storyboard!
-//                                    let next = storyboard.instantiateViewController(withIdentifier: "TodoListViewController") as! TodoListViewController
-//                                    next.viewType = self.todoListViewType
-//                                    self.dismiss(animated: true, completion: nil)
+                                    self.isPresent = false
+                                    dismiss()
                                 }
                         })
                     }
             } label: {
                 Text("追加する")
-            }
-            Button {
-                dismiss()
-            } label: {
-                Text("閉じる")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -97,6 +104,6 @@ struct AddView: View {
     }
 }
 
-#Preview {
-    AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "")
-}
+//#Preview {
+//    AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "", isPresent: false, userName: "")
+//}
