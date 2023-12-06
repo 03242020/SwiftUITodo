@@ -13,13 +13,6 @@ import FirebaseFirestore
 struct EditView: View {
     @State private var email: String = ""
     @State private var year: String = ""
-    @State private var detail: String = ""
-    @State var title: String
-    @State var scheduleDate: String
-    @State var scheduleTime: String
-    @State var createdTime: String
-    @State var updatedTime: String
-    @State var id: String
     @State var todoInfo = TodoInfo()
     @State var selectDate = Date()
     @State var selectTime = Date()
@@ -43,23 +36,33 @@ struct EditView: View {
     }
     var body: some View {
         VStack {
-            //$email
-            TextField("資料作成", text: $title)
+            TextField("資料作成", text: .init(get: { todoInfo.todoTitle ?? "" },
+                                          set: { todoInfo.todoTitle = $0 }
+                                         ))
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack {
                 DatePicker("", selection: $selectDate, displayedComponents: .date).labelsHidden()
                 Spacer()
                 DatePicker("", selection: $selectTime, displayedComponents: .hourAndMinute).labelsHidden()
             }
-            TextField("CreatedAt", text: $createdTime)
+            Text(" CreatedAt: \(Text(todoInfo.todoCreated ?? ""))")
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-            TextField("UpdatedAt", text: $updatedTime)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            Text("詳細")
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField("Detail", text: $detail)
+            Text(" UpdatedAt: \(Text(todoInfo.todoUpdated ?? ""))")
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(EdgeInsets(
+                    top: 0,
+                    leading: 0,
+                    bottom: 10,
+                    trailing: 0
+                ))
+            Text(" 詳細")
+                .frame(maxWidth: .infinity, alignment: .leading)
+            TextField("Detail", text: .init(get: { todoInfo.todoDetail ?? "" },
+                                            set: { todoInfo.todoTitle = $0 }
+                                           ))
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-            Text("状態")
+            Text(" 状態")
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack {
                 Text("未完了")
@@ -77,16 +80,14 @@ struct EditView: View {
             .padding()
             HStack {
                 Button(action: {
-                    //                if let title = $title,
-                    //                   let detail = $detail {
                     if let user = Auth.auth().currentUser {
-                        Firestore.firestore().collection("users/\(user.uid)/todos").document(id).updateData(
+                        Firestore.firestore().collection("users/\(user.uid)/todos").document(todoInfo.id!).updateData(
                             [
-                                "title": title,
-                                "detail": detail,
+                                "title": todoInfo.todoTitle ?? "",
+                                "detail": todoInfo.todoDetail ?? "",
                                 "updatedAt": FieldValue.serverTimestamp(),
-                                "scheduleDate": scheduleDate,
-                                "scheduleTime": scheduleTime,
+                                "scheduleDate": todoInfo.todoScheduleDate ?? "",
+                                "scheduleTime": todoInfo.todoScheduleTime ?? "",
                                 "viewType": todoInfo.todoViewType ?? 0,
                             ]
                             , completion: { error in
@@ -101,7 +102,6 @@ struct EditView: View {
                                 }
                             })
                     }
-                    //                }
                     // ボタンをタップした時のアクション
                     print("tap buton")
                 }, label: {
@@ -124,7 +124,3 @@ struct EditView: View {
         }
     }
 }
-
-//#Preview {
-//    EditView(title: "", scheduleDate: "", scheduleTime: "", id: "")
-//}

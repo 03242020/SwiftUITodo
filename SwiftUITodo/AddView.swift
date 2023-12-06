@@ -12,19 +12,12 @@ import FirebaseFirestore
 struct AddView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.timeZone) private var timeZone
-    @State var title: String
-    @State var scheduleDate: String
-    @State var scheduleTime: String
-    @State private var detail: String = ""
+    @State var todoInfo = TodoInfo()
     @State var date = ""
     @State var time = ""
-    @State var editingText: String
     @State var showPicker = false
     @State var selectDate = Date()
     @State var selectTime = Date()
-    @Binding var isPresent: Bool
-        // FirstViewから呼び出す際にFirstViewで初期化したViewModel変数を指定
-    @ObservedObject var userName: ViewModel
     var dateFormat: DateFormatter {
         let dformat = DateFormatter()
         dformat.dateStyle = .medium
@@ -45,7 +38,9 @@ struct AddView: View {
     var body: some View {
         VStack {
             //$email
-            TextField("資料作成", text: $title)
+            TextField("資料作成", text: .init(get: { todoInfo.todoTitle ?? "" },
+                                          set: { todoInfo.todoTitle = $0 }
+                                         ))
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack {
                 DatePicker("", selection: $selectDate, displayedComponents: .date).labelsHidden()
@@ -54,14 +49,12 @@ struct AddView: View {
             }
             Text("詳細")
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField("detail", text: $detail)
+            TextField("detail", text: .init(get: { todoInfo.todoDetail ?? "" },
+                                            set: { todoInfo.todoTitle = $0 }
+                                           ))
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 Spacer()
-
-//            Text("Original: \(selectDate.description)")
-//            Text("DateFormat: \(selectDate, formatter: dateFormat)")
-//            Text("TimeFormat: \(selectTime, formatter: timeFormat)")
             if self.showPicker {
                 DatePicker(selection: $selectDate,displayedComponents: .date, label: {})
             }
@@ -72,8 +65,8 @@ struct AddView: View {
                 let createdTime = FieldValue.serverTimestamp()
                         Firestore.firestore().collection("users/\(user.uid)/todos").document().setData(
                             [
-                             "title": title,
-                             "detail": detail,
+                                "title": todoInfo.todoTitle ?? "",
+                                "detail": todoInfo.todoDetail ?? "",
                              "isDone": false,
                              "createdAt": createdTime,
                              "updatedAt": createdTime,
@@ -87,10 +80,8 @@ struct AddView: View {
                                     print("TODO作成失敗: " + error.localizedDescription)
                                     let dialog = UIAlertController(title: "TODO作成失敗", message: error.localizedDescription, preferredStyle: .alert)
                                     dialog.addAction(UIAlertAction(title: "OK", style: .default))
-//                                    self.present(dialog, animated: true, completion: nil)
                                 } else {
                                     print("TODO作成成功")
-                                    self.isPresent = false
                                     dismiss()
                                 }
                         })
@@ -103,7 +94,3 @@ struct AddView: View {
         Spacer()
     }
 }
-
-//#Preview {
-//    AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "", isPresent: false, userName: "")
-//}

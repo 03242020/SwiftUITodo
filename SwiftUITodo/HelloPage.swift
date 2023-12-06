@@ -18,10 +18,18 @@ struct HelloPage: View {
         case either     = 3
         case toBuy      = 4
     }
-    @State var showSecondView = false
-    @ObservedObject var userName = ViewModel()
+    var viewModel: AuthViewModel
     var viewType = CategoryType.normal.rawValue
     var isDone: Bool? = false
+    let data: [String] = ["huga", "hoge", "hugahuga"]
+    
+    @State var showSecondView = false
+    @State var showHogeText = false
+    @State var getTodoArray: [TodoInfo] = [TodoInfo]()
+    @State private var showSheet: Bool = false
+    @State var addActive: Bool = false
+    @State var path = NavigationPath()
+    
     func getTodoDataForFirestore() {
         getTodoArray = [TodoInfo]()
         if let user = Auth.auth().currentUser {
@@ -31,6 +39,7 @@ struct HelloPage: View {
                 } else {
                     if let querySnapshot = querySnapshot {
                         for doc in querySnapshot.documents {
+                            //TodoInfoのみで、Codableを用いてUUIDをモデルに追加し
                             let data = doc.data()
                             //                            let todoId = doc.documentID
                             let id = doc.documentID
@@ -67,13 +76,7 @@ struct HelloPage: View {
             })
         }
     }
-    var viewModel: AuthViewModel
-    let data: [String] = ["huga", "hoge", "hugahuga"]
-    @State var showHogeText = false
-    @State var getTodoArray: [TodoInfo] = [TodoInfo]()
-    @State private var showSheet: Bool = false
-    @State var addActive: Bool = false
-    @State var path = NavigationPath()
+    
     var body: some View {
         VStack{
             Text("")
@@ -82,7 +85,11 @@ struct HelloPage: View {
                 }
             NavigationStack {
                 List(getTodoArray) { getTodoArray in
-                    NavigationLink(destination: EditView(title: getTodoArray.todoTitle ?? "値渡し失敗", scheduleDate: getTodoArray.todoScheduleDate ?? "値渡し失敗", scheduleTime: getTodoArray.todoScheduleTime ?? "値渡し失敗", createdTime: getTodoArray.todoCreated ?? "", updatedTime: getTodoArray.todoUpdated ?? "", id: getTodoArray.id!, todoInfo: getTodoArray)){
+                    NavigationLink(destination: EditView(
+                        todoInfo: getTodoArray)
+                        .onDisappear() {
+                        getTodoDataForFirestore()
+                    }){
                         Text(getTodoArray.todoTitle!)
                     }
                     .navigationBarTitle("NavBar")
@@ -104,38 +111,14 @@ struct HelloPage: View {
                                     x: 1.0, y: 1.0)
                     })
                     .navigationDestination(isPresented: $addActive) {
-                        AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "",isPresent: self.$showSecondView, userName: self.userName)
+                        AddView().onDisappear() {
+                            getTodoDataForFirestore()
+                        }
                     }
                 }
-                    .offset(x: -16.0, y: -16.0)
+                .offset(x: -16.0, y: -16.0)
             }
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-//        .navigationViewStyle(StackNavigationViewStyle()) // この行を追加
-
-
-//            Spacer(minLength: 0)
-            //            }
-//            NavigationStack {
-//                Button {
-//                    addActive.toggle()
-//                } label: {
-//                    HStack{
-//                        Image(systemName: "arrowshape.right.fill")
-//                        Text("AddViewへ")
-//                    }
-//                }
-////                .buttonStyle(.bordered)
-//                .navigationDestination(isPresented: $addActive, destination: {AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "")
-//                })
-//            }
-        }
-
-//        ZStack{
-
-            //                .fullScreenCover(isPresented: $addActive, content: {
-            //                    AddView(title: "", scheduleDate: "", scheduleTime: "", editingText: "")
-            //                        })
-//        }
     }
-
+}
