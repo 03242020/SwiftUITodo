@@ -94,25 +94,28 @@ struct HelloPage: View {
                     }
                     .navigationBarTitle("NavBar")
                 }
-                NavigationStack {
-                    Button(action: {
-                        addActive.toggle()
-                    }, label: {
-                        Image(systemName: "rectangle.stack.badge.plus")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 24.0, height: 24.0)
-                            .foregroundColor(.white)
-                            .padding(.all, 12.0)
-                            .background(Color.red)
-                            .cornerRadius(24.0)
-                            .shadow(color: .black.opacity(0.3),
-                                    radius: 5.0,
-                                    x: 1.0, y: 1.0)
-                    })
-                    .navigationDestination(isPresented: $addActive) {
-                        AddView().onDisappear() {
-                            getTodoDataForFirestore()
+                ZStack {
+                    NavigationStack {
+                        Button(action: {
+                            addActive.toggle()
+                        }, label: {
+                            Image(systemName: "pencil")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24.0, height: 24.0)
+                                .foregroundColor(.white)
+                                .padding(.all, 12.0)
+                                .background(Color.red)
+                                .cornerRadius(24.0)
+                                .shadow(color: .black.opacity(0.3),
+                                        radius: 5.0,
+                                        x: 1.0, y: 1.0)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                        })
+                        .navigationDestination(isPresented: $addActive) {
+                            AddView().onDisappear() {
+                                getTodoDataForFirestore()
+                            }
                         }
                     }
                 }
@@ -122,3 +125,4 @@ struct HelloPage: View {
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
     }
 }
+

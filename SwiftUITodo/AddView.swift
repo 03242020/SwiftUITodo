@@ -38,9 +38,7 @@ struct AddView: View {
     var body: some View {
         VStack {
             //$email
-            TextField("資料作成", text: .init(get: { todoInfo.todoTitle ?? "" },
-                                          set: { todoInfo.todoTitle = $0 }
-                                         ))
+            TextField("資料作成", text: $todoInfo.todoTitle.bound)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack {
                 DatePicker("", selection: $selectDate, displayedComponents: .date).labelsHidden()
@@ -49,9 +47,7 @@ struct AddView: View {
             }
             Text("詳細")
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField("detail", text: .init(get: { todoInfo.todoDetail ?? "" },
-                                            set: { todoInfo.todoTitle = $0 }
-                                           ))
+            TextField("detail", text: $todoInfo.todoDetail.bound)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 Spacer()

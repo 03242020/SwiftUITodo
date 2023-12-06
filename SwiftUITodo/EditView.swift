@@ -16,6 +16,7 @@ struct EditView: View {
     @State var todoInfo = TodoInfo()
     @State var selectDate = Date()
     @State var selectTime = Date()
+
     @Environment(\.timeZone) private var timeZone
     @Environment(\.dismiss) private var dismiss
     var dateFormat: DateFormatter {
@@ -36,9 +37,11 @@ struct EditView: View {
     }
     var body: some View {
         VStack {
-            TextField("資料作成", text: .init(get: { todoInfo.todoTitle ?? "" },
-                                          set: { todoInfo.todoTitle = $0 }
-                                         ))
+            let binding = Binding(
+                get: { self.todoInfo.todoTitle },
+                set: { self.todoInfo.todoTitle = $0 }
+            )
+            TextField("資料作成", text: $todoInfo.todoTitle.bound)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack {
                 DatePicker("", selection: $selectDate, displayedComponents: .date).labelsHidden()
@@ -58,9 +61,7 @@ struct EditView: View {
                 ))
             Text(" 詳細")
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TextField("Detail", text: .init(get: { todoInfo.todoDetail ?? "" },
-                                            set: { todoInfo.todoTitle = $0 }
-                                           ))
+            TextField("Detail", text: $todoInfo.todoDetail.bound)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             Text(" 状態")
                 .frame(maxWidth: .infinity, alignment: .leading)
