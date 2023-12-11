@@ -54,8 +54,6 @@
 
 /* Begin PBXFileReference section */
 		BE45799D2B148AB600CC1DD9 /* FloatingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButtonView.swift; sourceTree = "<group>"; };
-		BE4F91892B26AC970042E672 /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
-		BE4F918B2B26ACF40042E672 /* rightClick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rightClick.swift; sourceTree = "<group>"; };
 		BE5C42AB2B08D12300BAF505 /* SwiftUITodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUITodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE5C42AE2B08D12300BAF505 /* SwiftUITodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUITodoApp.swift; sourceTree = "<group>"; };
 		BE5C42B02B08D12300BAF505 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -141,8 +139,6 @@
 				BE45799D2B148AB600CC1DD9 /* FloatingButtonView.swift */,
 				BE5C430E2B0A9FC600BAF505 /* AddView.swift */,
 				BE5C430C2B09365700BAF505 /* EditView.swift */,
-				BE4F91892B26AC970042E672 /* test.swift */,
-				BE4F918B2B26ACF40042E672 /* rightClick.swift */,
 				BE84BFC92B20261800AC999D /* Optional.swift */,
 				BE5C430A2B08F4F000BAF505 /* TodoInfo.swift */,
 				BE5C43062B08DE6D00BAF505 /* ResetPasswordView.swift */,
