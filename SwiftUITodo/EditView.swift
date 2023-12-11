@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-
+//完了、未完了のラベルを活性にする
 struct EditView: View {
     @State private var email: String = ""
     @State private var year: String = ""
@@ -118,7 +118,6 @@ struct EditView: View {
                                 print("TODO削除失敗: " + error.localizedDescription)
                                 let dialog = UIAlertController(title: "TODO削除失敗", message: error.localizedDescription, preferredStyle: .alert)
                                 dialog.addAction(UIAlertAction(title: "OK", style: .default))
-//                                self.present(dialog, animated: true, completion: nil)
                             } else {
                                 print("TODO削除成功")
                                 dismiss()

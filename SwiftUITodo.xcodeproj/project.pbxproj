@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BE45799E2B148AB700CC1DD9 /* FloatingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE45799D2B148AB600CC1DD9 /* FloatingButtonView.swift */; };
+		BE4F918A2B26AC970042E672 /* test.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4F91892B26AC970042E672 /* test.swift */; };
+		BE4F918C2B26ACF40042E672 /* rightClick.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE4F918B2B26ACF40042E672 /* rightClick.swift */; };
 		BE5C42AF2B08D12300BAF505 /* SwiftUITodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5C42AE2B08D12300BAF505 /* SwiftUITodoApp.swift */; };
 		BE5C42B12B08D12300BAF505 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5C42B02B08D12300BAF505 /* AppDelegate.swift */; };
 		BE5C42B32B08D12700BAF505 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE5C42B22B08D12700BAF505 /* Assets.xcassets */; };
@@ -47,9 +50,14 @@
 		BE5C430B2B08F4F000BAF505 /* TodoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5C430A2B08F4F000BAF505 /* TodoInfo.swift */; };
 		BE5C430D2B09365700BAF505 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5C430C2B09365700BAF505 /* EditView.swift */; };
 		BE5C430F2B0A9FC700BAF505 /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5C430E2B0A9FC600BAF505 /* AddView.swift */; };
+		BE84BFCA2B20261800AC999D /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE84BFC92B20261800AC999D /* Optional.swift */; };
+		BED68B812B1585E4009E6EA8 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED68B802B1585E4009E6EA8 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BE45799D2B148AB600CC1DD9 /* FloatingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingButtonView.swift; sourceTree = "<group>"; };
+		BE4F91892B26AC970042E672 /* test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = test.swift; sourceTree = "<group>"; };
+		BE4F918B2B26ACF40042E672 /* rightClick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rightClick.swift; sourceTree = "<group>"; };
 		BE5C42AB2B08D12300BAF505 /* SwiftUITodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUITodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE5C42AE2B08D12300BAF505 /* SwiftUITodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUITodoApp.swift; sourceTree = "<group>"; };
 		BE5C42B02B08D12300BAF505 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -64,6 +72,8 @@
 		BE5C430A2B08F4F000BAF505 /* TodoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoInfo.swift; sourceTree = "<group>"; };
 		BE5C430C2B09365700BAF505 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		BE5C430E2B0A9FC600BAF505 /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
+		BE84BFC92B20261800AC999D /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
+		BED68B802B1585E4009E6EA8 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,8 +139,13 @@
 				BE5C42C92B08DD4100BAF505 /* SignInView.swift */,
 				BE5C43022B08DE0800BAF505 /* SignUpView.swift */,
 				BE5C43042B08DE2800BAF505 /* HelloPage.swift */,
+				BED68B802B1585E4009E6EA8 /* ViewModel.swift */,
+				BE45799D2B148AB600CC1DD9 /* FloatingButtonView.swift */,
 				BE5C430E2B0A9FC600BAF505 /* AddView.swift */,
 				BE5C430C2B09365700BAF505 /* EditView.swift */,
+				BE4F91892B26AC970042E672 /* test.swift */,
+				BE4F918B2B26ACF40042E672 /* rightClick.swift */,
+				BE84BFC92B20261800AC999D /* Optional.swift */,
 				BE5C430A2B08F4F000BAF505 /* TodoInfo.swift */,
 				BE5C43062B08DE6D00BAF505 /* ResetPasswordView.swift */,
 				BE5C43082B08E70500BAF505 /* GoogleService-Info.plist */,
@@ -254,13 +269,18 @@
 				BE5C42B12B08D12300BAF505 /* AppDelegate.swift in Sources */,
 				BE5C43052B08DE2800BAF505 /* HelloPage.swift in Sources */,
 				BE5C430F2B0A9FC700BAF505 /* AddView.swift in Sources */,
+				BE84BFCA2B20261800AC999D /* Optional.swift in Sources */,
 				BE5C43032B08DE0800BAF505 /* SignUpView.swift in Sources */,
 				BE5C430B2B08F4F000BAF505 /* TodoInfo.swift in Sources */,
 				BE5C43072B08DE6D00BAF505 /* ResetPasswordView.swift in Sources */,
 				BE5C430D2B09365700BAF505 /* EditView.swift in Sources */,
 				BE5C42AF2B08D12300BAF505 /* SwiftUITodoApp.swift in Sources */,
+				BE4F918C2B26ACF40042E672 /* rightClick.swift in Sources */,
 				BE5C42CA2B08DD4100BAF505 /* SignInView.swift in Sources */,
+				BE45799E2B148AB700CC1DD9 /* FloatingButtonView.swift in Sources */,
+				BED68B812B1585E4009E6EA8 /* ViewModel.swift in Sources */,
 				BE5C42C82B08DCED00BAF505 /* AuthViewModel.swift in Sources */,
+				BE4F918A2B26AC970042E672 /* test.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
