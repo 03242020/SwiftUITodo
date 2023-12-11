@@ -112,6 +112,19 @@ struct EditView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
                 Button(action: {
+                    if let user = Auth.auth().currentUser {
+                        Firestore.firestore().collection("users/\(user.uid)/todos").document(todoInfo.id!).delete() { error in
+                            if let error = error {
+                                print("TODO削除失敗: " + error.localizedDescription)
+                                let dialog = UIAlertController(title: "TODO削除失敗", message: error.localizedDescription, preferredStyle: .alert)
+                                dialog.addAction(UIAlertAction(title: "OK", style: .default))
+//                                self.present(dialog, animated: true, completion: nil)
+                            } else {
+                                print("TODO削除成功")
+                                dismiss()
+                            }
+                        }
+                    }
                     // ボタンをタップした時のアクション
                     print("tap buton")
                 }, label: {

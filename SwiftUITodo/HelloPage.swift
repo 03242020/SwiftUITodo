@@ -18,11 +18,15 @@ struct HelloPage: View {
         case either     = 3
         case toBuy      = 4
     }
+    enum SegmentType: CaseIterable {
+        case zero
+        case one
+    }
     var viewModel: AuthViewModel
     var viewType = CategoryType.normal.rawValue
-    var isDone: Bool? = false
-    let data: [String] = ["huga", "hoge", "hugahuga"]
     
+    @State var selectedCompletion: SegmentType = .zero
+    @State var isDone: Bool? = false
     @State var showSecondView = false
     @State var showHogeText = false
     @State var getTodoArray: [TodoInfo] = [TodoInfo]()
@@ -121,8 +125,31 @@ struct HelloPage: View {
                 }
                 .offset(x: -16.0, y: -16.0)
             }
+            Picker("未完了、完了済み", selection: $selectedCompletion) {
+                ForEach(SegmentType.allCases, id: \.self) {
+                    type in
+                    switch type {
+                    case .zero:
+                        Text("未完了")
+                    case .one:
+                        Text("完了済み")
+                    }
+                }
+            }.pickerStyle(SegmentedPickerStyle())
+             .padding()
+             .onChange(of: selectedCompletion) {
+                 switch selectedCompletion {
+                 case .zero:
+                     isDone = false
+                     getTodoDataForFirestore()
+                 case .one:
+                     isDone = true
+                     getTodoDataForFirestore()
+                 }
+             }
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
     }
+        
 }
 
