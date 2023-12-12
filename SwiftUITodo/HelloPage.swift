@@ -92,13 +92,35 @@ struct HelloPage: View {
                     NavigationLink(destination: EditView(
                         todoInfo: getTodoArray)
                         .onDisappear() {
-                        getTodoDataForFirestore()
-                    }){
-                        Text(getTodoArray.todoTitle!)
-                    }
-                    .navigationBarTitle("NavBar")
+                            getTodoDataForFirestore()
+                        }){
+                            Text(getTodoArray.todoTitle!)
+                        }
+                        .navigationBarTitle("NavBar")
                 }
                 ZStack {
+                    Picker("未完了、完了済み", selection: $selectedCompletion) {
+                        ForEach(SegmentType.allCases, id: \.self) {
+                            type in
+                            switch type {
+                            case .zero:
+                                Text("未完了")
+                            case .one:
+                                Text("完了済み")
+                            }
+                        }
+                    }.pickerStyle(SegmentedPickerStyle())
+                        .padding()
+                        .onChange(of: selectedCompletion) {
+                            switch selectedCompletion {
+                            case .zero:
+                                isDone = false
+                                getTodoDataForFirestore()
+                            case .one:
+                                isDone = true
+                                getTodoDataForFirestore()
+                            }
+                        }
                     NavigationStack {
                         Button(action: {
                             addActive.toggle()
@@ -114,7 +136,7 @@ struct HelloPage: View {
                                 .shadow(color: .black.opacity(0.3),
                                         radius: 5.0,
                                         x: 1.0, y: 1.0)
-                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 16.0, trailing: 16.0))
+                                .padding(EdgeInsets(top: -110, leading: 300, bottom: 16.0, trailing: 16.0))
                         })
                         .navigationDestination(isPresented: $addActive) {
                             AddView().onDisappear() {
@@ -123,33 +145,10 @@ struct HelloPage: View {
                         }
                     }
                 }
-                .offset(x: -16.0, y: -16.0)
+                
             }
-            Picker("未完了、完了済み", selection: $selectedCompletion) {
-                ForEach(SegmentType.allCases, id: \.self) {
-                    type in
-                    switch type {
-                    case .zero:
-                        Text("未完了")
-                    case .one:
-                        Text("完了済み")
-                    }
-                }
-            }.pickerStyle(SegmentedPickerStyle())
-             .padding()
-             .onChange(of: selectedCompletion) {
-                 switch selectedCompletion {
-                 case .zero:
-                     isDone = false
-                     getTodoDataForFirestore()
-                 case .one:
-                     isDone = true
-                     getTodoDataForFirestore()
-                 }
-             }
+
         }
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
     }
-        
 }
 

@@ -38,10 +38,6 @@ struct EditView: View {
     }
     var body: some View {
         VStack {
-            let binding = Binding(
-                get: { self.todoInfo.todoTitle },
-                set: { self.todoInfo.todoTitle = $0 }
-            )
             TextField("資料作成", text: $todoInfo.todoTitle.bound)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack {
