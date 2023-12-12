@@ -16,6 +16,7 @@ struct EditView: View {
     @State var todoInfo = TodoInfo()
     @State var selectDate = Date()
     @State var selectTime = Date()
+    @State var todoIsDoneInit = "未完了"
 
     @Environment(\.timeZone) private var timeZone
     @Environment(\.dismiss) private var dismiss
@@ -66,7 +67,17 @@ struct EditView: View {
             Text(" 状態")
                 .frame(maxWidth: .infinity, alignment: .leading)
             HStack {
-                Text("未完了")
+                Text(todoIsDoneInit)
+                    .onAppear {
+                        switch todoInfo.todoIsDone {
+                        case false:
+                            todoIsDoneInit = "未完了"
+                        case true:
+                            todoIsDoneInit = "完了済み"
+                        default:
+                            break
+                        }
+                    }
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
                 Button(action: {
