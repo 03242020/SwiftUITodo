@@ -17,6 +17,7 @@ struct EditView: View {
     @State var selectDate = Date()
     @State var selectTime = Date()
     @State var todoIsDoneInit = "未完了"
+    @State var todoIsCompletion = "完了済みにする"
 
     @Environment(\.timeZone) private var timeZone
     @Environment(\.dismiss) private var dismiss
@@ -79,9 +80,37 @@ struct EditView: View {
                 Button(action: {
                     // ボタンをタップした時のアクション
                     print("tap buton")
+                    if let user = Auth.auth().currentUser {
+                        Firestore.firestore().collection("users/\(user.uid)/todos").document(todoInfo.id!).updateData(
+                            [
+                                "isDone": !todoInfo.todoIsDone!,
+                                "viewType": todoInfo.todoViewType ?? 0,
+                                "updatedAt": FieldValue.serverTimestamp()
+                            ]
+                            , completion: {error in
+                                if let error = error {
+                                    print("TODO更新失敗: " + error.localizedDescription)
+                                    let dialog = UIAlertController(title: "TODO更新失敗", message: error.localizedDescription, preferredStyle: .alert)
+                                    dialog.addAction(UIAlertAction(title: "OK", style: .default))
+                                } else {
+                                    print("TODO更新成功")
+                                    dismiss()
+                                }
+                            })
+                    }
                 }, label: {
                     // ボタン内部に表示するオブジェクト
-                    Text("完了済みにする")
+                    Text(todoIsCompletion)
+                        .onAppear {
+                            switch todoInfo.todoIsDone {
+                            case false:
+                                todoIsCompletion = "完了済みにする"
+                            case true:
+                                todoIsCompletion = "未完了にする"
+                            default:
+                                break
+                            }
+                        }
                 })
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

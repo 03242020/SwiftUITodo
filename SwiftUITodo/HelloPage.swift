@@ -11,6 +11,7 @@ import FirebaseFirestore
 
     // ログイン後の画面
 struct HelloPage: View {
+    
     enum CategoryType: Int {
         case normal     = 0
         case just       = 1
@@ -34,6 +35,77 @@ struct HelloPage: View {
     @State var addActive: Bool = false
     @State var path = NavigationPath()
     
+    
+    var body: some View {
+        VStack{
+            Text("")
+                .onAppear {
+                    getTodoDataForFirestore()
+                }
+            NavigationStack {
+                List(getTodoArray) { getTodoArray in
+                    NavigationLink(destination: EditView(
+                        todoInfo: getTodoArray)
+                        .onDisappear() {
+                            getTodoDataForFirestore()
+                        }){
+                            Text(getTodoArray.todoTitle!)
+                        }
+                        .navigationBarTitle("NavBar")
+                }
+                ZStack {
+                    Picker("未完了、完了済み", selection: $selectedCompletion) {
+                        ForEach(SegmentType.allCases, id: \.self) {
+                            type in
+                            switch type {
+                            case .zero:
+                                Text("未完了")
+                            case .one:
+                                Text("完了済み")
+                            }
+                        }
+                    }.pickerStyle(SegmentedPickerStyle())
+                        .padding()
+                        .onChange(of: selectedCompletion) {
+                            switch selectedCompletion {
+                            case .zero:
+                                isDone = false
+                                getTodoDataForFirestore()
+                            case .one:
+                                isDone = true
+                                getTodoDataForFirestore()
+                            }
+                        }
+                        .onAppear {
+                            UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor : UIColor.red], for: .selected)
+                        }
+                    NavigationStack {
+                        Button(action: {
+                            addActive.toggle()
+                        }, label: {
+                            Image(systemName: "pencil")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24.0, height: 24.0)
+                                .foregroundColor(.white)
+                                .padding(.all, 12.0)
+                                .background(Color.red)
+                                .cornerRadius(24.0)
+                                .shadow(color: .black.opacity(0.3),
+                                        radius: 5.0,
+                                        x: 1.0, y: 1.0)
+                                .padding(EdgeInsets(top: -110, leading: 300, bottom: 16.0, trailing: 16.0))
+                        })
+                        .navigationDestination(isPresented: $addActive) {
+                            AddView().onDisappear() {
+                                getTodoDataForFirestore()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     func getTodoDataForFirestore() {
         getTodoArray = [TodoInfo]()
         if let user = Auth.auth().currentUser {
@@ -78,76 +150,6 @@ struct HelloPage: View {
                     }
                 }
             })
-        }
-    }
-    
-    var body: some View {
-        VStack{
-            Text("")
-                .onAppear {
-                    getTodoDataForFirestore()
-                }
-            NavigationStack {
-                List(getTodoArray) { getTodoArray in
-                    NavigationLink(destination: EditView(
-                        todoInfo: getTodoArray)
-                        .onDisappear() {
-                            getTodoDataForFirestore()
-                        }){
-                            Text(getTodoArray.todoTitle!)
-                        }
-                        .navigationBarTitle("NavBar")
-                }
-                ZStack {
-                    Picker("未完了、完了済み", selection: $selectedCompletion) {
-                        ForEach(SegmentType.allCases, id: \.self) {
-                            type in
-                            switch type {
-                            case .zero:
-                                Text("未完了")
-                            case .one:
-                                Text("完了済み")
-                            }
-                        }
-                    }.pickerStyle(SegmentedPickerStyle())
-                        .padding()
-                        .onChange(of: selectedCompletion) {
-                            switch selectedCompletion {
-                            case .zero:
-                                isDone = false
-                                getTodoDataForFirestore()
-                            case .one:
-                                isDone = true
-                                getTodoDataForFirestore()
-                            }
-                        }
-                    NavigationStack {
-                        Button(action: {
-                            addActive.toggle()
-                        }, label: {
-                            Image(systemName: "pencil")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 24.0, height: 24.0)
-                                .foregroundColor(.white)
-                                .padding(.all, 12.0)
-                                .background(Color.red)
-                                .cornerRadius(24.0)
-                                .shadow(color: .black.opacity(0.3),
-                                        radius: 5.0,
-                                        x: 1.0, y: 1.0)
-                                .padding(EdgeInsets(top: -110, leading: 300, bottom: 16.0, trailing: 16.0))
-                        })
-                        .navigationDestination(isPresented: $addActive) {
-                            AddView().onDisappear() {
-                                getTodoDataForFirestore()
-                            }
-                        }
-                    }
-                }
-                
-            }
-
         }
     }
 }
