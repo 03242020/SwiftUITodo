@@ -11,13 +11,25 @@ import FirebaseFirestore
 
 //完了、未完了のラベルを活性にする
 struct EditView: View {
+    enum CategoryType: Int {
+        case normal     = 0
+        case just       = 1
+        case remember   = 2
+        case either     = 3
+        case toBuy      = 4
+    }
     @State private var email: String = ""
     @State private var year: String = ""
+    @State private var useRedTextJust = false
+    @State private var useRedTextRemember = false
+    @State private var useRedTextEither = false
+    @State private var useRedTextToBuy = false
     @State var todoInfo = TodoInfo()
     @State var selectDate = Date()
     @State var selectTime = Date()
     @State var todoIsDoneInit = "未完了"
     @State var todoIsCompletion = "完了済みにする"
+
 
     @Environment(\.timeZone) private var timeZone
     @Environment(\.dismiss) private var dismiss
@@ -57,6 +69,90 @@ struct EditView: View {
                     bottom: 10,
                     trailing: 0
                 ))
+            ZStack{
+                HStack{
+                    Button(action: {
+                        todoInfo.todoViewType = 1
+                        useRedTextJust = true
+                        useRedTextRemember = false
+                        useRedTextEither = false
+                        useRedTextToBuy = false
+                    }, label: {
+                        Text("すぐやる")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextJust ? .red : .blue)
+                            .onAppear() {
+                                if todoInfo.todoViewType == 1 {
+                                    self.useRedTextJust = true
+                                }
+                            }
+                    })
+                    Button(action: {
+                        todoInfo.todoViewType = 2
+                        useRedTextJust = false
+                        useRedTextRemember = true
+                        useRedTextEither = false
+                        useRedTextToBuy = false
+                    }, label: {
+                        Text("覚えとく")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextRemember ? .red : .blue)
+                            .onAppear() {
+                                if todoInfo.todoViewType == 2 {
+                                    self.useRedTextRemember = true
+                                }
+                            }
+                    })
+                    Button(action: {
+                        todoInfo.todoViewType = 3
+                        useRedTextJust = false
+                        useRedTextRemember = false
+                        useRedTextEither = true
+                        useRedTextToBuy = false
+                    }, label: {
+                        Text("やるやら")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextEither ? .red : .blue)
+                            .onAppear() {
+                                if todoInfo.todoViewType == 3 {
+                                    self.useRedTextEither = true
+                                }
+                            }
+                    })
+                    Button(action: {
+                        todoInfo.todoViewType = 4
+                        useRedTextJust = false
+                        useRedTextEither = false
+                        useRedTextRemember = false
+                        useRedTextToBuy = true
+                    }, label: {
+                        Text("買うもの")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextToBuy ? .red : .blue)
+                            .onAppear() {
+                                if todoInfo.todoViewType == 4 {
+                                    self.useRedTextToBuy = true
+                                }
+                            }
+                    })
+                }
+            }
             Text(" 詳細")
                 .frame(maxWidth: .infinity, alignment: .leading)
             TextField("Detail", text: $todoInfo.todoDetail.bound)

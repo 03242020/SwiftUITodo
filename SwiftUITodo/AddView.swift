@@ -10,6 +10,13 @@ import FirebaseAuth
 import FirebaseFirestore
 
 struct AddView: View {
+    enum CategoryType: Int {
+        case normal     = 0
+        case just       = 1
+        case remember   = 2
+        case either     = 3
+        case toBuy      = 4
+    }
     @Environment(\.dismiss) private var dismiss
     @Environment(\.timeZone) private var timeZone
     @State var todoInfo = TodoInfo()
@@ -18,6 +25,10 @@ struct AddView: View {
     @State var showPicker = false
     @State var selectDate = Date()
     @State var selectTime = Date()
+    @State private var useRedTextJust = false
+    @State private var useRedTextRemember = false
+    @State private var useRedTextEither = false
+    @State private var useRedTextToBuy = false
     var dateFormat: DateFormatter {
         let dformat = DateFormatter()
         dformat.dateStyle = .medium
@@ -53,6 +64,70 @@ struct AddView: View {
                 Spacer()
             if self.showPicker {
                 DatePicker(selection: $selectDate,displayedComponents: .date, label: {})
+            }
+            ZStack{
+                HStack{
+                    Button(action: {
+                        todoInfo.todoViewType = 1
+                        useRedTextJust = true
+                        useRedTextRemember = false
+                        useRedTextEither = false
+                        useRedTextToBuy = false
+                    }, label: {
+                        Text("すぐやる")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextJust ? .red : .blue)
+                    })
+                    Button(action: {
+                        todoInfo.todoViewType = 2
+                        useRedTextJust = false
+                        useRedTextRemember = true
+                        useRedTextEither = false
+                        useRedTextToBuy = false
+                    }, label: {
+                        Text("覚えとく")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextRemember ? .red : .blue)
+                    })
+                    Button(action: {
+                        todoInfo.todoViewType = 3
+                        useRedTextJust = false
+                        useRedTextRemember = false
+                        useRedTextEither = true
+                        useRedTextToBuy = false
+                    }, label: {
+                        Text("やるやら")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextEither ? .red : .blue)
+                    })
+                    Button(action: {
+                        todoInfo.todoViewType = 4
+                        useRedTextJust = false
+                        useRedTextEither = false
+                        useRedTextRemember = false
+                        useRedTextToBuy = true
+                    }, label: {
+                        Text("買うもの")
+                            .frame(width: 68, height: 34)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.blue, lineWidth: 2)
+                            )
+                            .foregroundColor(useRedTextToBuy ? .red : .blue)
+                    })
+                }
             }
             Button {
                     // ②ログイン済みか確認

@@ -49,6 +49,7 @@
 		BE5C430D2B09365700BAF505 /* EditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5C430C2B09365700BAF505 /* EditView.swift */; };
 		BE5C430F2B0A9FC700BAF505 /* AddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE5C430E2B0A9FC600BAF505 /* AddView.swift */; };
 		BE84BFCA2B20261800AC999D /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE84BFC92B20261800AC999D /* Optional.swift */; };
+		BE9577192B2F7E55009BBED8 /* CapsuleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9577182B2F7E55009BBED8 /* CapsuleButtonStyle.swift */; };
 		BED68B812B1585E4009E6EA8 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BED68B802B1585E4009E6EA8 /* ViewModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +70,7 @@
 		BE5C430C2B09365700BAF505 /* EditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditView.swift; sourceTree = "<group>"; };
 		BE5C430E2B0A9FC600BAF505 /* AddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddView.swift; sourceTree = "<group>"; };
 		BE84BFC92B20261800AC999D /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
+		BE9577182B2F7E55009BBED8 /* CapsuleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButtonStyle.swift; sourceTree = "<group>"; };
 		BED68B802B1585E4009E6EA8 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -130,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				BE5C42AE2B08D12300BAF505 /* SwiftUITodoApp.swift */,
+				BE9577182B2F7E55009BBED8 /* CapsuleButtonStyle.swift */,
 				BE5C42B02B08D12300BAF505 /* AppDelegate.swift */,
 				BE5C42C72B08DCED00BAF505 /* AuthViewModel.swift */,
 				BE5C42C92B08DD4100BAF505 /* SignInView.swift */,
@@ -265,6 +268,7 @@
 				BE5C430F2B0A9FC700BAF505 /* AddView.swift in Sources */,
 				BE84BFCA2B20261800AC999D /* Optional.swift in Sources */,
 				BE5C43032B08DE0800BAF505 /* SignUpView.swift in Sources */,
+				BE9577192B2F7E55009BBED8 /* CapsuleButtonStyle.swift in Sources */,
 				BE5C430B2B08F4F000BAF505 /* TodoInfo.swift in Sources */,
 				BE5C43072B08DE6D00BAF505 /* ResetPasswordView.swift in Sources */,
 				BE5C430D2B09365700BAF505 /* EditView.swift in Sources */,
