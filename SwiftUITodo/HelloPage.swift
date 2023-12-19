@@ -55,7 +55,12 @@ struct HelloPage: View {
                     NavigationLink(destination: EditView(
                         todoInfo: getTodoArray)
                         .onDisappear() {
-                            getTodoDataForFirestore()
+                            switch viewType {
+                            case 0:
+                                getTodoDataForFirestore()
+                            default:
+                                getTodoCategoryDataForFirestore()
+                            }
                         }){
                             Text(getTodoArray.todoTitle!)
                         }
