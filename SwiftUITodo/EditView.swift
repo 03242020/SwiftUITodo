@@ -29,8 +29,6 @@ struct EditView: View {
     @State var selectTime = Date()
     @State var todoIsDoneInit = "未完了"
     @State var todoIsCompletion = "完了済みにする"
-
-
     @Environment(\.timeZone) private var timeZone
     @Environment(\.dismiss) private var dismiss
     var dateFormat: DateFormatter {

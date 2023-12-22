@@ -8,7 +8,6 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
-
     // ログイン後の画面
 struct HelloPage: View {
     enum CategoryType: Int {
@@ -25,17 +24,15 @@ struct HelloPage: View {
 //    0570-045-109
 //    3->1->1
     var viewModel: AuthViewModel
-    var lightBlue: UIColor { return UIColor.init(red: 186 / 255, green: 255 / 255, blue: 255 / 255, alpha: 1.0) }
     
     @State var selectedCompletion: SegmentType = .zero
     @State var isDone: Bool? = false
-    @State var showSecondView = false
-    @State var showHogeText = false
     @State var getTodoArray: [TodoInfo] = [TodoInfo]()
-    @State private var showSheet: Bool = false
+    @State var getTodoArrayEdit = TodoInfo()
     @State var addActive: Bool = false
+    @State var isPresented: Bool = false
     @State var path = NavigationPath()
-    @State var capsuleEnabled: Bool = true
+    @State private var showingEditView = false
     @State var viewType = CategoryType.normal.rawValue
     @State private var useRedTextAll = false
     @State private var useRedTextJust = false
@@ -48,11 +45,37 @@ struct HelloPage: View {
         VStack{
             Text("")
                 .onAppear {
+                    useRedTextAll = true
                     getTodoDataForFirestore()
                 }
             NavigationStack {
-                List(getTodoArray) { getTodoArray in
-                    NavigationLink(destination: EditView(
+                
+                List(getTodoArray){Array in
+//                    Text(getTodoArray.todoTitle ?? "取得不可")
+//                        .onTapGesture {
+//                            isPresented.toggle()
+//                        }
+                    Button(Array.todoTitle ?? "取得不可"){
+                        isPresented.toggle()
+                        getTodoArrayEdit = Array
+                    }
+                }.navigationDestination(isPresented: $isPresented) {
+                        EditView(todoInfo: getTodoArrayEdit)
+//                        .onDisappear() {
+//                            switch viewType {
+//                            case 0:
+//                                getTodoDataForFirestore()
+//                            default:
+//                                getTodoCategoryDataForFirestore()
+//                            }
+//                        }
+                    }
+                    //navigationStackの方を優先的に使おう
+                    //destinationに書き換える
+                    //ALLが初期表示なので赤色で表示すべき
+                    //空の場合はタイトル
+                    //edit画面のテキストフィールドをはじの方を空白を開ける
+                    /*NavigationLink(destination: EditView(
                         todoInfo: getTodoArray)
                         .onDisappear() {
                             switch viewType {
@@ -63,9 +86,9 @@ struct HelloPage: View {
                             }
                         }){
                             Text(getTodoArray.todoTitle!)
-                        }
-                        .navigationBarTitle("NavBar")
-                }
+                        }*/
+//                        .navigationBarTitle("NavBar")
+//                }
                 ZStack{
                     HStack{
                         Button(action: {
@@ -156,27 +179,31 @@ struct HelloPage: View {
                         })
                     }
                 }
-                ZStack {
-                    NavigationStack {
-                        Button(action: {
-                            addActive.toggle()
-                        }, label: {
-                            Image(systemName: "pencil")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 24.0, height: 24.0)
-                                .foregroundColor(.white)
-                                .padding(.all, 12.0)
-                                .background(Color.red)
-                                .cornerRadius(24.0)
-                                .shadow(color: .black.opacity(0.3),
-                                        radius: 5.0,
-                                        x: 1.0, y: 1.0)
-                                .padding(EdgeInsets(top: 0, leading: 300, bottom: -30.0, trailing: 16.0))
-                        })
-                        .navigationDestination(isPresented: $addActive) {
-                            AddView().onDisappear() {
-                                getTodoDataForFirestore()
+                HStack {
+                    ZStack {
+                        NavigationStack {
+                            Button(action: {
+                                addActive.toggle()
+                            }, label: {
+                                Image(systemName: "pencil")
+                                    .resizable()
+                                    .buttonStyle(.plain)
+                                    .scaledToFit()
+                                    .frame(width: 24.0, height: 24.0)
+                                    .foregroundColor(.white)
+                                    .padding(.all, 12.0)
+                                    .background(Color.red)
+                                    .cornerRadius(24.0)
+                                    .shadow(color: .black.opacity(0.3),
+                                            radius: 5.0,
+                                            x: 1.0, y: 1.0)
+                                    
+                            })
+                            .padding(EdgeInsets(top: 0, leading: 300, bottom: -23.0, trailing: 16.0))
+                            .navigationDestination(isPresented: $addActive) {
+                                AddView().onDisappear() {
+                                    getTodoDataForFirestore()
+                                }
                             }
                         }
                     }
@@ -257,7 +284,6 @@ struct HelloPage: View {
                             //scheduleDateArray?.append(data["scheduleDate"] as? String ?? "yyyy/mm/dd hh:mm")
                         }
                         print(getTodoArray)
-                        //                        self.tableView.reloadData()
                     }
                 }
             })
@@ -303,28 +329,10 @@ struct HelloPage: View {
                             //scheduleDateArray?.append(data["scheduleDate"] as? String ?? "yyyy/mm/dd hh:mm")
                         }
                         print(getTodoArray)
-                        //                        self.tableView.reloadData()
                     }
                 }
             })
         }
-    }
-}
-
-struct CustomButton: View {
-
-    let function: () -> Void
-
-    var body: some View{
-
-        Button(action: {
-            function()
-            
-        }) {
-            Text("テキスト")
-
-        }
-
     }
 }
 
