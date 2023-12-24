@@ -29,6 +29,7 @@ struct EditView: View {
     @State var selectTime = Date()
     @State var todoIsDoneInit = "未完了"
     @State var todoIsCompletion = "完了済みにする"
+    @Binding var isCheck: Bool
     @Environment(\.timeZone) private var timeZone
     @Environment(\.dismiss) private var dismiss
     var dateFormat: DateFormatter {
@@ -188,6 +189,7 @@ struct EditView: View {
                                     dialog.addAction(UIAlertAction(title: "OK", style: .default))
                                 } else {
                                     print("TODO更新成功")
+                                    isCheck.toggle()
                                     dismiss()
                                 }
                             })
@@ -229,6 +231,7 @@ struct EditView: View {
                                     //                                self.present(dialog, animated: true, completion: nil)
                                 } else {
                                     print("TODO更新成功")
+                                    isCheck.toggle()
                                     dismiss()
                                 }
                             })
@@ -239,6 +242,7 @@ struct EditView: View {
                     // ボタン内部に表示するオブジェクト
                     Text("編集する")
                 })
+                .preference(key: BoolPreference.self, value: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
                 Button(action: {
@@ -250,6 +254,7 @@ struct EditView: View {
                                 dialog.addAction(UIAlertAction(title: "OK", style: .default))
                             } else {
                                 print("TODO削除成功")
+                                isCheck.toggle()
                                 dismiss()
                             }
                         }

@@ -19,6 +19,7 @@ struct AddView: View {
     }
     @Environment(\.dismiss) private var dismiss
     @Environment(\.timeZone) private var timeZone
+    @Binding var addIsCheck: Bool
     @State var todoInfo = TodoInfo()
     @State var date = ""
     @State var time = ""
@@ -143,7 +144,7 @@ struct AddView: View {
                              "updatedAt": createdTime,
                              "scheduleDate": dateFormat.string(from: selectDate),
                              "scheduleTime": timeFormat.string(from: selectTime),
-                             "viewType": 0
+                                "viewType": todoInfo.todoViewType ?? 0
                             ],merge: true
                             ,completion: { error in
                                 if let error = error {
@@ -153,6 +154,7 @@ struct AddView: View {
                                     dialog.addAction(UIAlertAction(title: "OK", style: .default))
                                 } else {
                                     print("TODO作成成功")
+                                    addIsCheck.toggle()
                                     dismiss()
                                 }
                         })

@@ -29,7 +29,7 @@ struct SignUpView: View {
             if viewModel.isAuthenticated {
                 // ログイン後のページに遷移
                 if viewModel.isAuthenticated {
-                    HelloPage(viewModel: viewModel)
+                    HelloPage(viewModel: viewModel, state: false)
                 }
 
             }

@@ -9,6 +9,15 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
     // ログイン後の画面
+struct BoolPreference: PreferenceKey {
+    typealias Value = Bool
+
+    static var defaultValue: Value = false
+
+    static func reduce(value: inout Value, nextValue: () -> Value) {
+        value = nextValue() || value
+    }
+}
 struct HelloPage: View {
     enum CategoryType: Int {
         case normal     = 0
@@ -39,7 +48,9 @@ struct HelloPage: View {
     @State private var useRedTextRemember = false
     @State private var useRedTextEither = false
     @State private var useRedTextToBuy = false
-    
+    @State var state: Bool = false
+    @State var isCheck: Bool = false
+    @State var addIsCheck: Bool = false
     
     var body: some View {
         VStack{
@@ -60,15 +71,27 @@ struct HelloPage: View {
                         getTodoArrayEdit = Array
                     }
                 }.navigationDestination(isPresented: $isPresented) {
-                        EditView(todoInfo: getTodoArrayEdit)
-//                        .onDisappear() {
-//                            switch viewType {
-//                            case 0:
-//                                getTodoDataForFirestore()
-//                            default:
-//                                getTodoCategoryDataForFirestore()
-//                            }
-//                        }
+                    EditView(todoInfo: getTodoArrayEdit, isCheck: $isCheck)
+                        .onPreferenceChange(BoolPreference.self) { value in
+                            self.state = value
+                        }
+                    //TODO猪股編集押下でこちらが動く様に調整
+                    //ボタン領域内に合わせる
+                    //カテゴリと追加ボタン
+                    //もっと急がないといけない
+                    //TODO猪股追加処理で実装すべき。戻るで読み込み発生しない様にする。
+                    //期限本日
+                        .onDisappear() {
+                            if isCheck == true {
+                                switch viewType {
+                                case 0:
+                                    getTodoDataForFirestore()
+                                default:
+                                    getTodoCategoryDataForFirestore()
+                                }
+                                isCheck.toggle()
+                            }
+                        }
                     }
                     //navigationStackの方を優先的に使おう
                     //destinationに書き換える
@@ -182,29 +205,50 @@ struct HelloPage: View {
                 HStack {
                     ZStack {
                         NavigationStack {
-                            Button(action: {
-                                addActive.toggle()
-                            }, label: {
+//                            Button(action: {
+//                                addActive.toggle()
+//                            }, label: {
                                 Image(systemName: "pencil")
-                                    .resizable()
-                                    .buttonStyle(.plain)
-                                    .scaledToFit()
+//                                    .resizable()
                                     .frame(width: 24.0, height: 24.0)
+//                                    .padding(.all, 12.0)
                                     .foregroundColor(.white)
-                                    .padding(.all, 12.0)
                                     .background(Color.red)
-                                    .cornerRadius(24.0)
-                                    .shadow(color: .black.opacity(0.3),
-                                            radius: 5.0,
-                                            x: 1.0, y: 1.0)
-                                    
-                            })
-                            .padding(EdgeInsets(top: 0, leading: 300, bottom: -23.0, trailing: 16.0))
+//                            })
+
+                                    .onTapGesture {
+                                        addActive.toggle()
+                                    }
+//                            .cornerRadius(24.0)
+                            .buttonStyle(.plain)
+//                            .scaledToFit()
+//                            .shadow(color: .black.opacity(0.3),
+//                                    radius: 5.0,
+//                                    x: 1.0, y: 1.0)
+//                            .padding(EdgeInsets(top: 0, leading: 300, bottom: -23.0, trailing: 16.0))
+//                            .clipped()
                             .navigationDestination(isPresented: $addActive) {
-                                AddView().onDisappear() {
-                                    getTodoDataForFirestore()
-                                }
+                                AddView(addIsCheck: $addIsCheck)
+                                    .onPreferenceChange(BoolPreference.self) { value in
+                                        self.state = value
+                                    }
+                                    .onDisappear() {
+                                        if addIsCheck == true {
+                                            switch viewType {
+                                            case 0:
+                                                getTodoDataForFirestore()
+                                            default:
+                                                getTodoCategoryDataForFirestore()
+                                            }
+                                            addIsCheck.toggle()
+                                        }
+                                    }
                             }
+//                            .navigationDestination(isPresented: $addActive) {
+//                                AddView().onDisappear() {
+//                                    getTodoDataForFirestore()
+//                                }
+//                            }
                         }
                     }
                 }
