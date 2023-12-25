@@ -205,28 +205,24 @@ struct HelloPage: View {
                 HStack {
                     ZStack {
                         NavigationStack {
-//                            Button(action: {
-//                                addActive.toggle()
-//                            }, label: {
+                            Button(action: {
+                                addActive.toggle()
+                            }, label: {
                                 Image(systemName: "pencil")
-//                                    .resizable()
+                                    .resizable()
+                                    .buttonStyle(.plain)
                                     .frame(width: 24.0, height: 24.0)
-//                                    .padding(.all, 12.0)
-                                    .foregroundColor(.white)
-                                    .background(Color.red)
-//                            })
-
-                                    .onTapGesture {
-                                        addActive.toggle()
-                                    }
-//                            .cornerRadius(24.0)
-                            .buttonStyle(.plain)
-//                            .scaledToFit()
-//                            .shadow(color: .black.opacity(0.3),
-//                                    radius: 5.0,
-//                                    x: 1.0, y: 1.0)
-//                            .padding(EdgeInsets(top: 0, leading: 300, bottom: -23.0, trailing: 16.0))
-//                            .clipped()
+                            })
+                            //今回外周部分にタップ領域伸びてた原因はpadding(.all)
+                            .padding(.all, 12.0)
+                            .foregroundColor(.white)
+                            .background(Color.red)
+                            .cornerRadius(24.0)
+                            .shadow(color: .black.opacity(0.3),
+                                    radius: 5.0,
+                                    x: 1.0, y: 1.0)
+                            .clipped()
+                            .padding(EdgeInsets(top: 0, leading: 300, bottom: -23.0, trailing: 16.0))
                             .navigationDestination(isPresented: $addActive) {
                                 AddView(addIsCheck: $addIsCheck)
                                     .onPreferenceChange(BoolPreference.self) { value in
