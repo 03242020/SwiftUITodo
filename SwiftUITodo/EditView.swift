@@ -78,18 +78,24 @@ struct EditView: View {
                         useRedTextToBuy = false
                     }, label: {
                         Text("すぐやる")
-                            .frame(width: 68, height: 34)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.blue, lineWidth: 2)
-                            )
-                            .foregroundColor(useRedTextJust ? .red : .blue)
+//                            .frame(width: 68, height: 34)
+//                            .overlay(
+//                                RoundedRectangle(cornerRadius: 20)
+//                                    .stroke(Color.blue, lineWidth: 2)
+//                            )
+//                            .foregroundColor(useRedTextJust ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 1 {
                                     self.useRedTextJust = true
                                 }
                             }
                     })
+                    .frame(width: 68, height: 44)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.blue, lineWidth: 2)
+                    )
+                    .foregroundColor(useRedTextJust ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 2
                         useRedTextJust = false
@@ -98,18 +104,24 @@ struct EditView: View {
                         useRedTextToBuy = false
                     }, label: {
                         Text("覚えとく")
-                            .frame(width: 68, height: 34)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.blue, lineWidth: 2)
-                            )
-                            .foregroundColor(useRedTextRemember ? .red : .blue)
+//                            .frame(width: 68, height: 34)
+//                            .overlay(
+//                                RoundedRectangle(cornerRadius: 20)
+//                                    .stroke(Color.blue, lineWidth: 2)
+//                            )
+//                            .foregroundColor(useRedTextRemember ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 2 {
                                     self.useRedTextRemember = true
                                 }
                             }
                     })
+                    .frame(width: 68, height: 44)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.blue, lineWidth: 2)
+                    )
+                    .foregroundColor(useRedTextRemember ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 3
                         useRedTextJust = false
@@ -118,18 +130,24 @@ struct EditView: View {
                         useRedTextToBuy = false
                     }, label: {
                         Text("やるやら")
-                            .frame(width: 68, height: 34)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.blue, lineWidth: 2)
-                            )
-                            .foregroundColor(useRedTextEither ? .red : .blue)
+//                            .frame(width: 68, height: 34)
+//                            .overlay(
+//                                RoundedRectangle(cornerRadius: 20)
+//                                    .stroke(Color.blue, lineWidth: 2)
+//                            )
+//                            .foregroundColor(useRedTextEither ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 3 {
                                     self.useRedTextEither = true
                                 }
                             }
                     })
+                    .frame(width: 68, height: 44)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.blue, lineWidth: 2)
+                    )
+                    .foregroundColor(useRedTextEither ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 4
                         useRedTextJust = false
@@ -138,18 +156,24 @@ struct EditView: View {
                         useRedTextToBuy = true
                     }, label: {
                         Text("買うもの")
-                            .frame(width: 68, height: 34)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .stroke(Color.blue, lineWidth: 2)
-                            )
-                            .foregroundColor(useRedTextToBuy ? .red : .blue)
+//                            .frame(width: 68, height: 34)
+//                            .overlay(
+//                                RoundedRectangle(cornerRadius: 20)
+//                                    .stroke(Color.blue, lineWidth: 2)
+//                            )
+//                            .foregroundColor(useRedTextToBuy ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 4 {
                                     self.useRedTextToBuy = true
                                 }
                             }
                     })
+                    .frame(width: 68, height: 44)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.blue, lineWidth: 2)
+                    )
+                    .foregroundColor(useRedTextToBuy ? .red : .blue)
                 }
             }
             Text(" 詳細")

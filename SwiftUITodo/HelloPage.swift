@@ -111,6 +111,7 @@ struct HelloPage: View {
                             Text(getTodoArray.todoTitle!)
                         }*/
 //                        .navigationBarTitle("NavBar")
+//                追加ボタンnのシェード
 //                }
                 ZStack{
                     HStack{
@@ -124,14 +125,20 @@ struct HelloPage: View {
                             useRedTextToBuy = false
                         }, label: {
                             Text("ALL")
-                                .frame(width: 68, height: 34)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.blue, lineWidth: 2)
-                                )
-                                .foregroundColor(useRedTextAll ? .red : .blue)
+//                            .buttonStyle(.plain)
+//                                .frame(width: 68, height: 34)
                         })
-                        .buttonStyle(.plain)
+                        .frame(width: 68, height: 44)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.blue, lineWidth: 2)
+                        )
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 20)
+//                                .stroke(Color.blue, lineWidth: 2)
+//                        )
+                        .foregroundColor(useRedTextAll ? .red : .blue)
+                        .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
                             viewType = 1
                             useRedTextAll = false
@@ -142,13 +149,17 @@ struct HelloPage: View {
                             getTodoCategoryDataForFirestore()
                         }, label: {
                             Text("すぐやる")
-                                .frame(width: 68, height: 34)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.blue, lineWidth: 2)
-                                )
-                                .foregroundColor(useRedTextJust ? .red : .blue)
+                                .contentShape(Rectangle())
                         })
+                        .frame(width: 68, height: 44)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.blue, lineWidth: 2)
+                        )
+                        
+                        .foregroundColor(useRedTextJust ? .red : .blue)
+                        .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
+                        .contentShape(Rectangle())
                         Button(action: {
                             viewType = 2
                             useRedTextAll = false
@@ -159,13 +170,14 @@ struct HelloPage: View {
                             getTodoCategoryDataForFirestore()
                         }, label: {
                             Text("覚えとく")
-                                .frame(width: 68, height: 34)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.blue, lineWidth: 2)
-                                )
-                                .foregroundColor(useRedTextRemember ? .red : .blue)
                         })
+                        .frame(width: 68, height: 44)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.blue, lineWidth: 2)
+                        )
+                        .foregroundColor(useRedTextRemember ? .red : .blue)
+                        .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
                             viewType = 3
                             useRedTextAll = false
@@ -176,13 +188,14 @@ struct HelloPage: View {
                             getTodoCategoryDataForFirestore()
                         }, label: {
                             Text("やるやら")
-                                .frame(width: 68, height: 34)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.blue, lineWidth: 2)
-                                )
-                                .foregroundColor(useRedTextEither ? .red : .blue)
                         })
+                        .frame(width: 68, height: 44)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.blue, lineWidth: 2)
+                        )
+                        .foregroundColor(useRedTextEither ? .red : .blue)
+                        .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
                             viewType = 4
                             useRedTextAll = false
@@ -193,13 +206,14 @@ struct HelloPage: View {
                             getTodoCategoryDataForFirestore()
                         }, label: {
                             Text("買うもの")
-                                .frame(width: 68, height: 34)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color.blue, lineWidth: 2)
-                                )
-                                .foregroundColor(useRedTextToBuy ? .red : .blue)
                         })
+                        .frame(width: 68, height: 44)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.blue, lineWidth: 2)
+                        )
+                        .foregroundColor(useRedTextToBuy ? .red : .blue)
+                        .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
                 HStack {
@@ -214,6 +228,8 @@ struct HelloPage: View {
                                     .frame(width: 24.0, height: 24.0)
                             })
                             //今回外周部分にタップ領域伸びてた原因はpadding(.all)
+                            //padding以外に大きさの指定をする方法を考える
+                            //カテゴリボタンのタップ領域を画像内に狭める
                             .padding(.all, 12.0)
                             .foregroundColor(.white)
                             .background(Color.red)
