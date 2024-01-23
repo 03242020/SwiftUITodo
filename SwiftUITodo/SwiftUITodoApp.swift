@@ -16,21 +16,10 @@ struct SwiftUITodoApp: App {
         WindowGroup {
             // ログイン状態によって画面遷移するページを変更する
             if viewModel.isAuthenticated {
-                HelloPage(viewModel: viewModel, state: false)
+                HelloPage(viewModel: viewModel, helloInfo: HelloInfo(isDone: false,viewType: 0), state: false)
             } else {
                 SignInView(viewModel: viewModel)
             }
         }
     }
 }
-    
-//import SwiftUI
-//
-//@main
-//struct SwiftUITodoApp: App {
-//    var body: some Scene {
-//        WindowGroup {
-//            ContentView()
-//        }
-//    }
-//}

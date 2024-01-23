@@ -9,6 +9,10 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
+struct SelectDateTime {
+    var selectDate: String?
+    var selectTime: String?
+}
 struct AddView: View {
     enum CategoryType: Int {
         case normal     = 0
@@ -70,124 +74,75 @@ struct AddView: View {
                 HStack{
                     Button(action: {
                         todoInfo.todoViewType = 1
-                        useRedTextJust = true
-                        useRedTextRemember = false
-                        useRedTextEither = false
-                        useRedTextToBuy = false
+                        switchColor()
                     }, label: {
                         Text("すぐやる")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextJust ? .red : .blue)
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextJust ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 2
-                        useRedTextJust = false
-                        useRedTextRemember = true
-                        useRedTextEither = false
-                        useRedTextToBuy = false
+                        switchColor()
                     }, label: {
                         Text("覚えとく")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextRemember ? .red : .blue)
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextRemember ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 3
-                        useRedTextJust = false
-                        useRedTextRemember = false
-                        useRedTextEither = true
-                        useRedTextToBuy = false
+                        switchColor()
                     }, label: {
                         Text("やるやら")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextEither ? .red : .blue)
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextEither ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 4
-                        useRedTextJust = false
-                        useRedTextEither = false
-                        useRedTextRemember = false
-                        useRedTextToBuy = true
+                        switchColor()
                     }, label: {
                         Text("買うもの")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextToBuy ? .red : .blue)
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextToBuy ? .red : .blue)
                 }
             }
             Button {
-                    // ②ログイン済みか確認
-                    if let user = Auth.auth().currentUser {
-                        // ③FirestoreにTodoデータを作成する
-                let createdTime = FieldValue.serverTimestamp()
-                        Firestore.firestore().collection("users/\(user.uid)/todos").document().setData(
-                            [
-                                "title": todoInfo.todoTitle ?? "",
-                                "detail": todoInfo.todoDetail ?? "",
-                             "isDone": false,
-                             "createdAt": createdTime,
-                             "updatedAt": createdTime,
-                             "scheduleDate": dateFormat.string(from: selectDate),
-                             "scheduleTime": timeFormat.string(from: selectTime),
-                                "viewType": todoInfo.todoViewType ?? 0
-                            ],merge: true
-                            ,completion: { error in
-                                if let error = error {
-                                    // ③が失敗した場合
-                                    print("TODO作成失敗: " + error.localizedDescription)
-                                    let dialog = UIAlertController(title: "TODO作成失敗", message: error.localizedDescription, preferredStyle: .alert)
-                                    dialog.addAction(UIAlertAction(title: "OK", style: .default))
-                                } else {
-                                    print("TODO作成成功")
-                                    addIsCheck.toggle()
-                                    dismiss()
-                                }
-                        })
-                    }
+                callAddTodoDataForFirestore(todoInfo: todoInfo)
             } label: {
                 Text("追加する")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         Spacer()
+    }
+    func switchColor() {
+        resetColor()
+        switch todoInfo.todoViewType {
+        case 1:
+            useRedTextJust = true
+        case 2:
+            useRedTextRemember = true
+        case 3:
+            useRedTextEither = true
+        case 4:
+            useRedTextToBuy = true
+        default:
+            break
+        }
+    }
+    func resetColor() {
+        useRedTextJust = false
+        useRedTextEither = false
+        useRedTextRemember = false
+        useRedTextToBuy = false
+    }
+    func callAddTodoDataForFirestore(todoInfo: TodoInfo) {
+        var tempSelectDateTime: SelectDateTime
+        tempSelectDateTime = SelectDateTime(selectDate: dateFormat.string(from: selectDate), selectTime: dateFormat.string(from: selectTime))
+        let addTodoTask = AddTodoTask()
+        addTodoTask.addTodoDataForFirestore(todoInfo: todoInfo, selectDateTime: tempSelectDateTime , postTask: {
+            addIsCheck.toggle()
+            dismiss()
+        })
     }
 }

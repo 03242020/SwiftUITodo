@@ -8,16 +8,13 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
-    // ログイン後の画面
-struct BoolPreference: PreferenceKey {
-    typealias Value = Bool
 
-    static var defaultValue: Value = false
-
-    static func reduce(value: inout Value, nextValue: () -> Value) {
-        value = nextValue() || value
-    }
+//カメラ機能について確認する。アプリ内で撮ってからアプリ内で表示する。など
+struct HelloInfo {
+    var isDone: Bool?
+    var viewType: Int?
 }
+
 struct HelloPage: View {
     enum CategoryType: Int {
         case normal     = 0
@@ -30,19 +27,19 @@ struct HelloPage: View {
         case zero
         case one
     }
-//    0570-045-109
-//    3->1->1
+    
     var viewModel: AuthViewModel
     
     @State var selectedCompletion: SegmentType = .zero
-    @State var isDone: Bool? = false
     @State var getTodoArray: [TodoInfo] = [TodoInfo]()
+    @State var helloInfo: HelloInfo
     @State var getTodoArrayEdit = TodoInfo()
     @State var addActive: Bool = false
     @State var isPresented: Bool = false
     @State var path = NavigationPath()
     @State private var showingEditView = false
-    @State var viewType = CategoryType.normal.rawValue
+    //Holderを使いたかったがState(値の監視)が機能してくれない
+    //foregroundColor(useRedTextAll ? .red : .blue)
     @State private var useRedTextAll = false
     @State private var useRedTextJust = false
     @State private var useRedTextRemember = false
@@ -57,15 +54,11 @@ struct HelloPage: View {
             Text("")
                 .onAppear {
                     useRedTextAll = true
-                    getTodoDataForFirestore()
+                    callGetTodoDataForFirestore(helloInfo: helloInfo)
                 }
             NavigationStack {
                 
                 List(getTodoArray){Array in
-//                    Text(getTodoArray.todoTitle ?? "取得不可")
-//                        .onTapGesture {
-//                            isPresented.toggle()
-//                        }
                     Button(Array.todoTitle ?? "取得不可"){
                         isPresented.toggle()
                         getTodoArrayEdit = Array
@@ -75,6 +68,7 @@ struct HelloPage: View {
                         .onPreferenceChange(BoolPreference.self) { value in
                             self.state = value
                         }
+                    
                     //TODO猪股編集押下でこちらが動く様に調整
                     //ボタン領域内に合わせる
                     //カテゴリと追加ボタン
@@ -83,135 +77,73 @@ struct HelloPage: View {
                     //期限本日
                         .onDisappear() {
                             if isCheck == true {
-                                switch viewType {
+                                switch helloInfo.viewType {
                                 case 0:
-                                    getTodoDataForFirestore()
+                                    callGetTodoDataForFirestore(helloInfo: helloInfo)
                                 default:
-                                    getTodoCategoryDataForFirestore()
+                                    callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                                 }
                                 isCheck.toggle()
                             }
                         }
-                    }
-                    //navigationStackの方を優先的に使おう
-                    //destinationに書き換える
-                    //ALLが初期表示なので赤色で表示すべき
-                    //空の場合はタイトル
-                    //edit画面のテキストフィールドをはじの方を空白を開ける
-                    /*NavigationLink(destination: EditView(
-                        todoInfo: getTodoArray)
-                        .onDisappear() {
-                            switch viewType {
-                            case 0:
-                                getTodoDataForFirestore()
-                            default:
-                                getTodoCategoryDataForFirestore()
-                            }
-                        }){
-                            Text(getTodoArray.todoTitle!)
-                        }*/
-//                        .navigationBarTitle("NavBar")
-//                追加ボタンnのシェード
-//                }
+                }
+                //navigationStackの方を優先的に使おう
+                //destinationに書き換える
+                //ALLが初期表示なので赤色で表示すべき
+                //空の場合はタイトル
+                //edit画面のテキストフィールドをはじの方を空白を開ける
                 ZStack{
                     HStack{
                         Button(action: {
-                            viewType = 0
-                            getTodoDataForFirestore()
-                            useRedTextAll = true
-                            useRedTextJust = false
-                            useRedTextRemember = false
-                            useRedTextEither = false
-                            useRedTextToBuy = false
+                            helloInfo.viewType = 0
+                            callGetTodoDataForFirestore(helloInfo: helloInfo)
+                            switchColor()
                         }, label: {
                             Text("ALL")
-//                            .buttonStyle(.plain)
-//                                .frame(width: 68, height: 34)
                         })
-                        .frame(width: 68, height: 44)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
-//                        .overlay(
-//                            RoundedRectangle(cornerRadius: 20)
-//                                .stroke(Color.blue, lineWidth: 2)
-//                        )
+                        .buttonStyle(RoundedButtonStyle())
                         .foregroundColor(useRedTextAll ? .red : .blue)
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
+                        
                         Button(action: {
-                            viewType = 1
-                            useRedTextAll = false
-                            useRedTextJust = true
-                            useRedTextRemember = false
-                            useRedTextEither = false
-                            useRedTextToBuy = false
-                            getTodoCategoryDataForFirestore()
+                            helloInfo.viewType = 1
+                            switchColor()
+                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("すぐやる")
                                 .contentShape(Rectangle())
                         })
-                        .frame(width: 68, height: 44)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
-                        
+                        .buttonStyle(RoundedButtonStyle())
                         .foregroundColor(useRedTextJust ? .red : .blue)
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
-                        .contentShape(Rectangle())
                         Button(action: {
-                            viewType = 2
-                            useRedTextAll = false
-                            useRedTextJust = false
-                            useRedTextRemember = true
-                            useRedTextEither = false
-                            useRedTextToBuy = false
-                            getTodoCategoryDataForFirestore()
+                            helloInfo.viewType = 2
+                            switchColor()
+                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("覚えとく")
                         })
-                        .frame(width: 68, height: 44)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
+                        .buttonStyle(RoundedButtonStyle())
                         .foregroundColor(useRedTextRemember ? .red : .blue)
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
-                            viewType = 3
-                            useRedTextAll = false
-                            useRedTextJust = false
-                            useRedTextRemember = false
-                            useRedTextEither = true
-                            useRedTextToBuy = false
-                            getTodoCategoryDataForFirestore()
+                            helloInfo.viewType = 3
+                            switchColor()
+                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("やるやら")
                         })
-                        .frame(width: 68, height: 44)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
+                        .buttonStyle(RoundedButtonStyle())
                         .foregroundColor(useRedTextEither ? .red : .blue)
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
-                            viewType = 4
-                            useRedTextAll = false
-                            useRedTextJust = false
-                            useRedTextEither = false
-                            useRedTextRemember = false
-                            useRedTextToBuy = true
-                            getTodoCategoryDataForFirestore()
+                            helloInfo.viewType = 4
+                            switchColor()
+                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("買うもの")
                         })
-                        .frame(width: 68, height: 44)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.blue, lineWidth: 2)
-                        )
+                        .buttonStyle(RoundedButtonStyle())
                         .foregroundColor(useRedTextToBuy ? .red : .blue)
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                     }
@@ -246,21 +178,16 @@ struct HelloPage: View {
                                     }
                                     .onDisappear() {
                                         if addIsCheck == true {
-                                            switch viewType {
+                                            switch helloInfo.viewType {
                                             case 0:
-                                                getTodoDataForFirestore()
+                                                callGetTodoDataForFirestore(helloInfo: helloInfo)
                                             default:
-                                                getTodoCategoryDataForFirestore()
+                                                callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                                             }
                                             addIsCheck.toggle()
                                         }
                                     }
                             }
-//                            .navigationDestination(isPresented: $addActive) {
-//                                AddView().onDisappear() {
-//                                    getTodoDataForFirestore()
-//                                }
-//                            }
                         }
                     }
                 }
@@ -279,18 +206,18 @@ struct HelloPage: View {
                     .onChange(of: selectedCompletion) {
                         switch selectedCompletion {
                         case .zero:
-                            isDone = false
-                            if viewType == 0 {
-                                getTodoDataForFirestore()
+                            helloInfo.isDone = false
+                            if helloInfo.viewType == 0 {
+                                callGetTodoDataForFirestore(helloInfo: helloInfo)
                             } else {
-                                getTodoCategoryDataForFirestore()
+                                callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                             }
                         case .one:
-                            isDone = true
-                            if viewType == 0 {
-                                getTodoDataForFirestore()
+                            helloInfo.isDone = true
+                            if helloInfo.viewType == 0 {
+                                callGetTodoDataForFirestore(helloInfo: helloInfo)
                             } else {
-                                getTodoCategoryDataForFirestore()
+                                callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                             }
                         }
                     }
@@ -300,95 +227,43 @@ struct HelloPage: View {
             }
         }
     }
-    func getTodoDataForFirestore() {
-        getTodoArray = [TodoInfo]()
-        if let user = Auth.auth().currentUser {
-            Firestore.firestore().collection("users/\(user.uid)/todos").whereField("isDone", isEqualTo: isDone ?? false).order(by: "createdAt").getDocuments(completion: { (querySnapshot, error) in
-                if let error = error {
-                    print("TODO取得失敗: " + error.localizedDescription)
-                } else {
-                    if let querySnapshot = querySnapshot {
-                        for doc in querySnapshot.documents {
-                            //TodoInfoのみで、Codableを用いてUUIDをモデルに追加し
-                            let data = doc.data()
-                            //                            let todoId = doc.documentID
-                            let id = doc.documentID
-                            let todoTitle = data["title"] as? String
-                            let todoDetail = data["detail"] as? String
-                            let todoIsDone = data["isDone"] as? Bool
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            let todoCreatedTimestamp = data["createdAt"] as? Timestamp
-                            let todoCreatedDate = todoCreatedTimestamp?.dateValue()
-                            let todoCreatedString = dateFormatter.string(from: todoCreatedDate ?? Date())
-                            print("Date: ",Date())
-                            let todoUpdatedTimestamp = data["updatedAt"] as? Timestamp
-                            let todoUpdatedDate = todoUpdatedTimestamp?.dateValue()
-                            let todoUpdatedString = dateFormatter.string(from: todoUpdatedDate ?? Date())
-                            let todoScheduleDate = data["scheduleDate"] as? String ?? "yyyy/mm/dd"
-                            let todoScheduleTime = data["scheduleTime"] as? String ?? "hh:mm"
-                            let todoViewType = data["viewType"] as? Int ?? 0
-                            var newTodo = TodoInfo()
-                            newTodo = TodoInfo(id: id,todoTitle: todoTitle,todoDetail: todoDetail,todoIsDone: todoIsDone,todoCreated: todoCreatedString,todoUpdated: todoUpdatedString, todoScheduleDate: todoScheduleDate,todoScheduleTime: todoScheduleTime,todoViewType: todoViewType)
-                            self.getTodoArray.append(newTodo)
-                            // オプショナル型にして、String以外の場合は、固定値を入れる記述。
-                            // 強制アンラップは極力やめる
-                            // 必須の要素はas!強制をする。あるかないか、scheduleDateArray等
-                            // はオプショナル型の使用を推奨
-                            // クラッシュの原因は大きい割合で、強制アンラップがありうるので気を付ける。
-                            // Swift入門53Pあたりのオプショナルを読み直す
-                            //scheduleDateArray?.append(data["scheduleDate"] as? String ?? "yyyy/mm/dd hh:mm")
-                        }
-                        print(getTodoArray)
-                    }
-                }
-            })
+
+    func callGetTodoDataForFirestore(helloInfo: HelloInfo) {
+        let getTodoTask = GetTodoTask()
+        getTodoTask.getTodoDataForFirestore(helloInfo: helloInfo, postTask:
+                                                        {tempTodoArray in
+            getTodoArray = tempTodoArray
+        })
+    }
+    func callGetTodoCategoryDataForFirestore(helloInfo: HelloInfo) {
+        let getTodoTask = GetTodoTask()
+        getTodoTask.getTodoCategoryDataForFirestore(helloInfo: helloInfo, postTask:
+                                                        {tempTodoArray in
+            getTodoArray = tempTodoArray
+        })
+    }
+    func switchColor() {
+        resetColor()
+        switch helloInfo.viewType {
+        case 0:
+            useRedTextAll = true
+        case 1:
+            useRedTextJust = true
+        case 2:
+            useRedTextRemember = true
+        case 3:
+            useRedTextEither = true
+        case 4:
+            useRedTextToBuy = true
+        default:
+            break
         }
     }
-    func getTodoCategoryDataForFirestore() {
-        getTodoArray = [TodoInfo]()
-        if let user = Auth.auth().currentUser {
-            Firestore.firestore().collection("users/\(user.uid)/todos").whereField("isDone", isEqualTo: isDone ?? false).order(by: "createdAt").whereField("viewType", isEqualTo: viewType).getDocuments(completion: { (querySnapshot, error) in
-                if let error = error {
-                    print("TODO取得失敗: " + error.localizedDescription)
-                } else {
-                    if let querySnapshot = querySnapshot {
-                        for doc in querySnapshot.documents {
-                            //TodoInfoのみで、Codableを用いてUUIDをモデルに追加し
-                            let data = doc.data()
-                            //                            let todoId = doc.documentID
-                            let id = doc.documentID
-                            let todoTitle = data["title"] as? String
-                            let todoDetail = data["detail"] as? String
-                            let todoIsDone = data["isDone"] as? Bool
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                            let todoCreatedTimestamp = data["createdAt"] as? Timestamp
-                            let todoCreatedDate = todoCreatedTimestamp?.dateValue()
-                            let todoCreatedString = dateFormatter.string(from: todoCreatedDate ?? Date())
-                            print("Date: ",Date())
-                            let todoUpdatedTimestamp = data["updatedAt"] as? Timestamp
-                            let todoUpdatedDate = todoUpdatedTimestamp?.dateValue()
-                            let todoUpdatedString = dateFormatter.string(from: todoUpdatedDate ?? Date())
-                            let todoScheduleDate = data["scheduleDate"] as? String ?? "yyyy/mm/dd"
-                            let todoScheduleTime = data["scheduleTime"] as? String ?? "hh:mm"
-                            let todoViewType = data["viewType"] as? Int ?? 0
-                            var newTodo = TodoInfo()
-                            newTodo = TodoInfo(id: id,todoTitle: todoTitle,todoDetail: todoDetail,todoIsDone: todoIsDone,todoCreated: todoCreatedString,todoUpdated: todoUpdatedString, todoScheduleDate: todoScheduleDate,todoScheduleTime: todoScheduleTime,todoViewType: todoViewType)
-                            self.getTodoArray.append(newTodo)
-                            // オプショナル型にして、String以外の場合は、固定値を入れる記述。
-                            // 強制アンラップは極力やめる
-                            // 必須の要素はas!強制をする。あるかないか、scheduleDateArray等
-                            // はオプショナル型の使用を推奨
-                            // クラッシュの原因は大きい割合で、強制アンラップがありうるので気を付ける。
-                            // Swift入門53Pあたりのオプショナルを読み直す
-                            //scheduleDateArray?.append(data["scheduleDate"] as? String ?? "yyyy/mm/dd hh:mm")
-                        }
-                        print(getTodoArray)
-                    }
-                }
-            })
-        }
+    func resetColor() {
+        useRedTextAll = false
+        useRedTextJust = false
+        useRedTextEither = false
+        useRedTextRemember = false
+        useRedTextToBuy = false
     }
 }
-

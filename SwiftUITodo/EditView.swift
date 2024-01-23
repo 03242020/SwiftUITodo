@@ -72,107 +72,55 @@ struct EditView: View {
                 HStack{
                     Button(action: {
                         todoInfo.todoViewType = 1
-                        useRedTextJust = true
-                        useRedTextRemember = false
-                        useRedTextEither = false
-                        useRedTextToBuy = false
+                        switchColor()
                     }, label: {
                         Text("すぐやる")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextJust ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 1 {
                                     self.useRedTextJust = true
                                 }
                             }
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextJust ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 2
-                        useRedTextJust = false
-                        useRedTextRemember = true
-                        useRedTextEither = false
-                        useRedTextToBuy = false
+                        switchColor()
                     }, label: {
                         Text("覚えとく")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextRemember ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 2 {
                                     self.useRedTextRemember = true
                                 }
                             }
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextRemember ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 3
-                        useRedTextJust = false
-                        useRedTextRemember = false
-                        useRedTextEither = true
-                        useRedTextToBuy = false
+                        switchColor()
                     }, label: {
                         Text("やるやら")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextEither ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 3 {
                                     self.useRedTextEither = true
                                 }
                             }
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextEither ? .red : .blue)
                     Button(action: {
                         todoInfo.todoViewType = 4
-                        useRedTextJust = false
-                        useRedTextEither = false
-                        useRedTextRemember = false
-                        useRedTextToBuy = true
+                        switchColor()
                     }, label: {
                         Text("買うもの")
-//                            .frame(width: 68, height: 34)
-//                            .overlay(
-//                                RoundedRectangle(cornerRadius: 20)
-//                                    .stroke(Color.blue, lineWidth: 2)
-//                            )
-//                            .foregroundColor(useRedTextToBuy ? .red : .blue)
                             .onAppear() {
                                 if todoInfo.todoViewType == 4 {
                                     self.useRedTextToBuy = true
                                 }
                             }
                     })
-                    .frame(width: 68, height: 44)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(Color.blue, lineWidth: 2)
-                    )
+                    .buttonStyle(RoundedButtonStyle())
                     .foregroundColor(useRedTextToBuy ? .red : .blue)
                 }
             }
@@ -197,29 +145,8 @@ struct EditView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
                 Button(action: {
-                    // ボタンをタップした時のアクション
-                    print("tap buton")
-                    if let user = Auth.auth().currentUser {
-                        Firestore.firestore().collection("users/\(user.uid)/todos").document(todoInfo.id!).updateData(
-                            [
-                                "isDone": !todoInfo.todoIsDone!,
-                                "viewType": todoInfo.todoViewType ?? 0,
-                                "updatedAt": FieldValue.serverTimestamp()
-                            ]
-                            , completion: {error in
-                                if let error = error {
-                                    print("TODO更新失敗: " + error.localizedDescription)
-                                    let dialog = UIAlertController(title: "TODO更新失敗", message: error.localizedDescription, preferredStyle: .alert)
-                                    dialog.addAction(UIAlertAction(title: "OK", style: .default))
-                                } else {
-                                    print("TODO更新成功")
-                                    isCheck.toggle()
-                                    dismiss()
-                                }
-                            })
-                    }
+                    callCompletionTodoDataForFirestore(todoInfo: todoInfo)
                 }, label: {
-                    // ボタン内部に表示するオブジェクト
                     Text(todoIsCompletion)
                         .onAppear {
                             switch todoInfo.todoIsDone {
@@ -237,56 +164,16 @@ struct EditView: View {
             .padding()
             HStack {
                 Button(action: {
-                    if let user = Auth.auth().currentUser {
-                        Firestore.firestore().collection("users/\(user.uid)/todos").document(todoInfo.id!).updateData(
-                            [
-                                "title": todoInfo.todoTitle ?? "",
-                                "detail": todoInfo.todoDetail ?? "",
-                                "updatedAt": FieldValue.serverTimestamp(),
-                                "scheduleDate": todoInfo.todoScheduleDate ?? "",
-                                "scheduleTime": todoInfo.todoScheduleTime ?? "",
-                                "viewType": todoInfo.todoViewType ?? 0,
-                            ]
-                            , completion: { error in
-                                if let error = error {
-                                    print("TODO更新失敗: " + error.localizedDescription)
-                                    let dialog = UIAlertController(title: "TODO更新失敗", message: error.localizedDescription, preferredStyle: .alert)
-                                    dialog.addAction(UIAlertAction(title: "OK", style: .default))
-                                    //                                self.present(dialog, animated: true, completion: nil)
-                                } else {
-                                    print("TODO更新成功")
-                                    isCheck.toggle()
-                                    dismiss()
-                                }
-                            })
-                    }
-                    // ボタンをタップした時のアクション
-                    print("tap buton")
+                    callEditTodoDataForFirestore(todoInfo: todoInfo)
                 }, label: {
-                    // ボタン内部に表示するオブジェクト
                     Text("編集する")
                 })
                 .preference(key: BoolPreference.self, value: true)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Spacer()
                 Button(action: {
-                    if let user = Auth.auth().currentUser {
-                        Firestore.firestore().collection("users/\(user.uid)/todos").document(todoInfo.id!).delete() { error in
-                            if let error = error {
-                                print("TODO削除失敗: " + error.localizedDescription)
-                                let dialog = UIAlertController(title: "TODO削除失敗", message: error.localizedDescription, preferredStyle: .alert)
-                                dialog.addAction(UIAlertAction(title: "OK", style: .default))
-                            } else {
-                                print("TODO削除成功")
-                                isCheck.toggle()
-                                dismiss()
-                            }
-                        }
-                    }
-                    // ボタンをタップした時のアクション
-                    print("tap buton")
+                    callDeleteTodoDataForFirestore(todoInfo: todoInfo)
                 }, label: {
-                    // ボタン内部に表示するオブジェクト
                     Text("削除する")
                 })
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -294,5 +181,49 @@ struct EditView: View {
             .padding()
             Spacer()
         }
+    }
+    func switchColor() {
+        resetColor()
+        switch todoInfo.todoViewType {
+        case 1:
+            useRedTextJust = true
+        case 2:
+            useRedTextRemember = true
+        case 3:
+            useRedTextEither = true
+        case 4:
+            useRedTextToBuy = true
+        default:
+            break
+        }
+    }
+    func resetColor() {
+        useRedTextJust = false
+        useRedTextEither = false
+        useRedTextRemember = false
+        useRedTextToBuy = false
+    }
+    func callEditTodoDataForFirestore(todoInfo: TodoInfo) {
+        var tempSelectDateTime: SelectDateTime
+        tempSelectDateTime = SelectDateTime(selectDate: dateFormat.string(from: selectDate), selectTime: dateFormat.string(from: selectTime))
+        let editTodoTask = EditTodoTask()
+        editTodoTask.editTodoDataForFirestore(todoInfo: todoInfo, selectDateTime: tempSelectDateTime , postTask: {
+            isCheck.toggle()
+            dismiss()
+        })
+    }
+    func callDeleteTodoDataForFirestore(todoInfo: TodoInfo) {
+        let deleteTodoTask = DeleteTodoTask()
+        deleteTodoTask.deleteTodoDataForFirestore(todoInfo: todoInfo, postTask: {
+            isCheck.toggle()
+            dismiss()
+        })
+    }
+    func callCompletionTodoDataForFirestore(todoInfo: TodoInfo) {
+        let completionTodoTask = CompletionTodoTask()
+        completionTodoTask.completionTodoDataForFirestore(todoInfo: todoInfo, postTask: {
+            isCheck.toggle()
+            dismiss()
+        })
     }
 }

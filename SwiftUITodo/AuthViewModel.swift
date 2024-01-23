@@ -5,7 +5,6 @@
 //  Created by ryo.inomata on 2023/11/18.
 //
 
-import SwiftUI
 import FirebaseFirestore
 import FirebaseAuth
 

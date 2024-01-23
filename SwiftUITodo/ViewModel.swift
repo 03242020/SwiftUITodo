@@ -6,9 +6,20 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class ViewModel: ObservableObject {
     @Published var name = ""
+}
+
+struct BoolPreference: PreferenceKey {
+    typealias Value = Bool
+
+    static var defaultValue: Value = false
+
+    static func reduce(value: inout Value, nextValue: () -> Value) {
+        value = nextValue() || value
+    }
 }
 //ViewModelを活用して実装する
 //TODOViewModelを調査する。

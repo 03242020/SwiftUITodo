@@ -29,7 +29,7 @@ struct SignInView: View {
 
                 if viewModel.isAuthenticated {
                     // ログイン後のページに遷移
-                    HelloPage(viewModel: viewModel, state: false)
+                    HelloPage(viewModel: viewModel, helloInfo: HelloInfo(isDone: false,viewType: 0), state: false)
                 }
 
                 // 新規登録画面への遷移ボタン
