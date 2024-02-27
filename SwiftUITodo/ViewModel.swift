@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-final class ViewModel: ObservableObject {
-    @Published var name = ""
-}
+//final class ViewModel: ObservableObject {
+//    @Published var name = ""
+//}
 
 struct BoolPreference: PreferenceKey {
     typealias Value = Bool

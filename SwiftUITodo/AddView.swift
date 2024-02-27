@@ -34,6 +34,7 @@ struct AddView: View {
     @State private var useRedTextRemember = false
     @State private var useRedTextEither = false
     @State private var useRedTextToBuy = false
+    @ObservedObject var itemListViewModel: ItemListViewModel
     var dateFormat: DateFormatter {
         let dformat = DateFormatter()
         dformat.dateStyle = .medium
@@ -107,7 +108,11 @@ struct AddView: View {
                 }
             }
             Button {
-                callAddTodoDataForFirestore(todoInfo: todoInfo)
+                itemListViewModel.callAddTodoDataForFirestore(todoInfo: todoInfo, tempSelectDateTime: SelectDateTime(selectDate: dateFormat.string(from: selectDate), selectTime: dateFormat.string(from: selectTime)))
+                //クロージャで後から処理に後程修正
+                addIsCheck.toggle()
+                dismiss()
+//                callAddTodoDataForFirestore(todoInfo: todoInfo)
             } label: {
                 Text("追加する")
             }
@@ -146,3 +151,4 @@ struct AddView: View {
         })
     }
 }
+

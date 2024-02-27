@@ -53,6 +53,7 @@ struct EditView: View {
             TextField("資料作成", text: $todoInfo.todoTitle.bound)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             HStack {
+                //不具合修正
                 DatePicker("", selection: $selectDate, displayedComponents: .date).labelsHidden()
                 Spacer()
                 DatePicker("", selection: $selectTime, displayedComponents: .hourAndMinute).labelsHidden()
@@ -226,4 +227,10 @@ struct EditView: View {
             dismiss()
         })
     }
+    func dateFromString(string: String, format: String) -> Date {
+            let formatter: DateFormatter = DateFormatter()
+            formatter.calendar = Calendar(identifier: .gregorian)
+            formatter.dateFormat = format
+            return formatter.date(from: string)!
+        }
 }

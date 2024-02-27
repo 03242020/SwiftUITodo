@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
-
+//うううううううううううううううううううううううううううううう＾＾＾＾＾
 //カメラ機能について確認する。アプリ内で撮ってからアプリ内で表示する。など
 struct HelloInfo {
     var isDone: Bool?
@@ -31,7 +31,7 @@ struct HelloPage: View {
     var viewModel: AuthViewModel
     
     @State var selectedCompletion: SegmentType = .zero
-    @State var getTodoArray: [TodoInfo] = [TodoInfo]()
+//    @State var getTodoArray: [TodoInfo] = [TodoInfo]()
     @State var helloInfo: HelloInfo
     @State var getTodoArrayEdit = TodoInfo()
     @State var addActive: Bool = false
@@ -49,21 +49,36 @@ struct HelloPage: View {
     @State var isCheck: Bool = false
     @State var addIsCheck: Bool = false
     
+    @ObservedObject var listViewModel = ListViewModel()
+    @ObservedObject var itemListViewModel: ItemListViewModel
+    
     var body: some View {
         VStack{
+                Button(action: {
+                    viewModel.signOut()
+                }, label: {
+                    Text("logout")
+                })
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(EdgeInsets(top: 10, leading: 15, bottom: 0, trailing: 0))
             Text("")
                 .onAppear {
                     useRedTextAll = true
-                    callGetTodoDataForFirestore(helloInfo: helloInfo)
+                    itemListViewModel.switchGetTodoDataForFirestore(helloInfo: helloInfo)
+//                    callGetTodoDataForFirestore(helloInfo: helloInfo)
                 }
             NavigationStack {
-                
-                List(getTodoArray){Array in
+                List(self.itemListViewModel.items){Array in
                     Button(Array.todoTitle ?? "取得不可"){
                         isPresented.toggle()
                         getTodoArrayEdit = Array
                     }
-                }.navigationDestination(isPresented: $isPresented) {
+                }
+                .refreshable {
+                    itemListViewModel.switchGetTodoDataForFirestore(helloInfo: helloInfo)
+//                    switchGetTodoDataForFirestore()
+                           }
+                .navigationDestination(isPresented: $isPresented) {
                     EditView(todoInfo: getTodoArrayEdit, isCheck: $isCheck)
                         .onPreferenceChange(BoolPreference.self) { value in
                             self.state = value
@@ -77,12 +92,9 @@ struct HelloPage: View {
                     //期限本日
                         .onDisappear() {
                             if isCheck == true {
-                                switch helloInfo.viewType {
-                                case 0:
-                                    callGetTodoDataForFirestore(helloInfo: helloInfo)
-                                default:
-                                    callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
-                                }
+                                //ここの利用にViewModelから出来たらいいな
+                                itemListViewModel.switchGetTodoDataForFirestore(helloInfo: helloInfo)
+//                                switchGetTodoDataForFirestore()
                                 isCheck.toggle()
                             }
                         }
@@ -96,19 +108,28 @@ struct HelloPage: View {
                     HStack{
                         Button(action: {
                             helloInfo.viewType = 0
-                            callGetTodoDataForFirestore(helloInfo: helloInfo)
-                            switchColor()
+                            resetColor()
+                            listViewModel.switchRedText(viewType: helloInfo.viewType ?? 0)
+//                            switchColor(redText: listViewModel.redText)
+                            useRedTextAll = listViewModel.model.useRedTextAll
+                            itemListViewModel.callGetTodoDataForFirestore(helloInfo: helloInfo)
+//                            callGetTodoDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("ALL")
                         })
                         .buttonStyle(RoundedButtonStyle())
+                        //helloのstateにmodelの値を都度代入するようにすればいける気がする
                         .foregroundColor(useRedTextAll ? .red : .blue)
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         
                         Button(action: {
                             helloInfo.viewType = 1
-                            switchColor()
-                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+                            resetColor()
+
+                             listViewModel.switchRedText(viewType: helloInfo.viewType ?? 0)
+                            useRedTextJust = listViewModel.model.useRedTextJust
+                            itemListViewModel.callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+//                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("すぐやる")
                                 .contentShape(Rectangle())
@@ -118,8 +139,11 @@ struct HelloPage: View {
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
                             helloInfo.viewType = 2
-                            switchColor()
-                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+                            resetColor()
+                            listViewModel.switchRedText(viewType: helloInfo.viewType ?? 0)
+                            useRedTextRemember = listViewModel.model.useRedTextRemember
+                            itemListViewModel.callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+//                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("覚えとく")
                         })
@@ -128,8 +152,11 @@ struct HelloPage: View {
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
                             helloInfo.viewType = 3
-                            switchColor()
-                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+                            resetColor()
+                            listViewModel.switchRedText(viewType: helloInfo.viewType ?? 0)
+                            useRedTextEither = listViewModel.model.useRedTextEither
+                            itemListViewModel.callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+//                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("やるやら")
                         })
@@ -138,8 +165,11 @@ struct HelloPage: View {
                         .padding(EdgeInsets(top: 30, leading: 0, bottom: 0, trailing: 0))
                         Button(action: {
                             helloInfo.viewType = 4
-                            switchColor()
-                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+                            resetColor()
+                            listViewModel.switchRedText(viewType: helloInfo.viewType ?? 0)
+                            useRedTextToBuy = listViewModel.model.useRedTextToBuy
+                            itemListViewModel.callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+//                            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
                         }, label: {
                             Text("買うもの")
                         })
@@ -172,18 +202,14 @@ struct HelloPage: View {
                             .clipped()
                             .padding(EdgeInsets(top: 0, leading: 300, bottom: -23.0, trailing: 16.0))
                             .navigationDestination(isPresented: $addActive) {
-                                AddView(addIsCheck: $addIsCheck)
+                                AddView(addIsCheck: $addIsCheck, itemListViewModel: ItemListViewModel())
                                     .onPreferenceChange(BoolPreference.self) { value in
                                         self.state = value
                                     }
                                     .onDisappear() {
                                         if addIsCheck == true {
-                                            switch helloInfo.viewType {
-                                            case 0:
-                                                callGetTodoDataForFirestore(helloInfo: helloInfo)
-                                            default:
-                                                callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
-                                            }
+//                                            switchGetTodoDataForFirestore()
+                                            itemListViewModel.switchGetTodoDataForFirestore(helloInfo: helloInfo)
                                             addIsCheck.toggle()
                                         }
                                     }
@@ -207,18 +233,12 @@ struct HelloPage: View {
                         switch selectedCompletion {
                         case .zero:
                             helloInfo.isDone = false
-                            if helloInfo.viewType == 0 {
-                                callGetTodoDataForFirestore(helloInfo: helloInfo)
-                            } else {
-                                callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
-                            }
+                            itemListViewModel.switchGetTodoDataForFirestore(helloInfo: helloInfo)
+//                            switchGetTodoDataForFirestore()
                         case .one:
                             helloInfo.isDone = true
-                            if helloInfo.viewType == 0 {
-                                callGetTodoDataForFirestore(helloInfo: helloInfo)
-                            } else {
-                                callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
-                            }
+                            itemListViewModel.switchGetTodoDataForFirestore(helloInfo: helloInfo)
+//                            switchGetTodoDataForFirestore()
                         }
                     }
                     .onAppear {
@@ -228,37 +248,19 @@ struct HelloPage: View {
         }
     }
 
-    func callGetTodoDataForFirestore(helloInfo: HelloInfo) {
-        let getTodoTask = GetTodoTask()
-        getTodoTask.getTodoDataForFirestore(helloInfo: helloInfo, postTask:
-                                                        {tempTodoArray in
-            getTodoArray = tempTodoArray
-        })
-    }
-    func callGetTodoCategoryDataForFirestore(helloInfo: HelloInfo) {
-        let getTodoTask = GetTodoTask()
-        getTodoTask.getTodoCategoryDataForFirestore(helloInfo: helloInfo, postTask:
-                                                        {tempTodoArray in
-            getTodoArray = tempTodoArray
-        })
-    }
-    func switchColor() {
-        resetColor()
-        switch helloInfo.viewType {
-        case 0:
-            useRedTextAll = true
-        case 1:
-            useRedTextJust = true
-        case 2:
-            useRedTextRemember = true
-        case 3:
-            useRedTextEither = true
-        case 4:
-            useRedTextToBuy = true
-        default:
-            break
-        }
-    }
+//    func callGetTodoDataForFirestore(helloInfo: HelloInfo) {
+//        let getTodoTask = GetTodoTask()
+//        getTodoTask.getTodoDataForFirestore(helloInfo: helloInfo, postTask: {tempTodoArray in
+//            getTodoArray = tempTodoArray
+//        })
+//    }
+//    func callGetTodoCategoryDataForFirestore(helloInfo: HelloInfo) {
+//        let getTodoTask = GetTodoTask()
+//        getTodoTask.getTodoCategoryDataForFirestore(helloInfo: helloInfo, postTask:
+//                                                        {tempTodoArray in
+//            getTodoArray = tempTodoArray
+//        })
+//    }
     func resetColor() {
         useRedTextAll = false
         useRedTextJust = false
@@ -266,4 +268,12 @@ struct HelloPage: View {
         useRedTextRemember = false
         useRedTextToBuy = false
     }
+//    func switchGetTodoDataForFirestore() {
+//        switch helloInfo.viewType {
+//        case 0:
+//            callGetTodoDataForFirestore(helloInfo: helloInfo)
+//        default:
+//            callGetTodoCategoryDataForFirestore(helloInfo: helloInfo)
+//        }
+//    }
 }
